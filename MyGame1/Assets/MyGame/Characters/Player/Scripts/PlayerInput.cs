@@ -44,6 +44,24 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Burst"",
+                    ""type"": ""Button"",
+                    ""id"": ""3134abf7-1cae-4fea-b97c-e33914f87e14"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Down"",
+                    ""type"": ""Button"",
+                    ""id"": ""1e6da260-5587-4d72-b4ab-d76855ff9c5f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -90,6 +108,28 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8397274e-5080-4434-bde4-cabc7da8d743"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Burst"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cadaf914-33aa-41e9-80f2-0dd34dcf6a1c"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -117,6 +157,8 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_PlayerMovement = asset.FindActionMap("PlayerMovement", throwIfNotFound: true);
         m_PlayerMovement_MoveX = m_PlayerMovement.FindAction("MoveX", throwIfNotFound: true);
         m_PlayerMovement_Jump = m_PlayerMovement.FindAction("Jump", throwIfNotFound: true);
+        m_PlayerMovement_Burst = m_PlayerMovement.FindAction("Burst", throwIfNotFound: true);
+        m_PlayerMovement_Down = m_PlayerMovement.FindAction("Down", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -178,12 +220,16 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private IPlayerMovementActions m_PlayerMovementActionsCallbackInterface;
     private readonly InputAction m_PlayerMovement_MoveX;
     private readonly InputAction m_PlayerMovement_Jump;
+    private readonly InputAction m_PlayerMovement_Burst;
+    private readonly InputAction m_PlayerMovement_Down;
     public struct PlayerMovementActions
     {
         private @PlayerInput m_Wrapper;
         public PlayerMovementActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @MoveX => m_Wrapper.m_PlayerMovement_MoveX;
         public InputAction @Jump => m_Wrapper.m_PlayerMovement_Jump;
+        public InputAction @Burst => m_Wrapper.m_PlayerMovement_Burst;
+        public InputAction @Down => m_Wrapper.m_PlayerMovement_Down;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -199,6 +245,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnJump;
+                @Burst.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnBurst;
+                @Burst.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnBurst;
+                @Burst.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnBurst;
+                @Down.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnDown;
+                @Down.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnDown;
+                @Down.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnDown;
             }
             m_Wrapper.m_PlayerMovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -209,6 +261,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Burst.started += instance.OnBurst;
+                @Burst.performed += instance.OnBurst;
+                @Burst.canceled += instance.OnBurst;
+                @Down.started += instance.OnDown;
+                @Down.performed += instance.OnDown;
+                @Down.canceled += instance.OnDown;
             }
         }
     }
@@ -226,5 +284,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     {
         void OnMoveX(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnBurst(InputAction.CallbackContext context);
+        void OnDown(InputAction.CallbackContext context);
     }
 }
