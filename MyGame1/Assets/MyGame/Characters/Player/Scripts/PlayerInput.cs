@@ -24,7 +24,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     ""name"": ""PlayerInput"",
     ""maps"": [
         {
-            ""name"": ""PlayerMovement"",
+            ""name"": ""PlayerController"",
             ""id"": ""37db2c94-ddcd-4ba1-b00e-82da92deeef3"",
             ""actions"": [
                 {
@@ -58,6 +58,33 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""name"": ""Down"",
                     ""type"": ""Button"",
                     ""id"": ""1e6da260-5587-4d72-b4ab-d76855ff9c5f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PositionMouse"",
+                    ""type"": ""Value"",
+                    ""id"": ""88bcd247-782a-4f25-9c6a-d27e844c4438"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""85573970-2718-47f7-89c5-303457034f4f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Update"",
+                    ""type"": ""Button"",
+                    ""id"": ""e4e350b7-78eb-44bd-bd8b-133aea7ee812"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -130,6 +157,39 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""Down"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d71781d9-44f3-4a32-ab08-138cfe8fc3c6"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PositionMouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1569f01f-b21e-4fad-af8e-9843d3d50db7"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f797d98d-5d00-4ac5-b556-ea7e9e19ad7a"",
+                    ""path"": ""<Keyboard>/j"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Update"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -153,12 +213,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         }
     ]
 }");
-        // PlayerMovement
-        m_PlayerMovement = asset.FindActionMap("PlayerMovement", throwIfNotFound: true);
-        m_PlayerMovement_MoveX = m_PlayerMovement.FindAction("MoveX", throwIfNotFound: true);
-        m_PlayerMovement_Jump = m_PlayerMovement.FindAction("Jump", throwIfNotFound: true);
-        m_PlayerMovement_Burst = m_PlayerMovement.FindAction("Burst", throwIfNotFound: true);
-        m_PlayerMovement_Down = m_PlayerMovement.FindAction("Down", throwIfNotFound: true);
+        // PlayerController
+        m_PlayerController = asset.FindActionMap("PlayerController", throwIfNotFound: true);
+        m_PlayerController_MoveX = m_PlayerController.FindAction("MoveX", throwIfNotFound: true);
+        m_PlayerController_Jump = m_PlayerController.FindAction("Jump", throwIfNotFound: true);
+        m_PlayerController_Burst = m_PlayerController.FindAction("Burst", throwIfNotFound: true);
+        m_PlayerController_Down = m_PlayerController.FindAction("Down", throwIfNotFound: true);
+        m_PlayerController_PositionMouse = m_PlayerController.FindAction("PositionMouse", throwIfNotFound: true);
+        m_PlayerController_Shoot = m_PlayerController.FindAction("Shoot", throwIfNotFound: true);
+        m_PlayerController_Update = m_PlayerController.FindAction("Update", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -215,44 +278,59 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // PlayerMovement
-    private readonly InputActionMap m_PlayerMovement;
-    private IPlayerMovementActions m_PlayerMovementActionsCallbackInterface;
-    private readonly InputAction m_PlayerMovement_MoveX;
-    private readonly InputAction m_PlayerMovement_Jump;
-    private readonly InputAction m_PlayerMovement_Burst;
-    private readonly InputAction m_PlayerMovement_Down;
-    public struct PlayerMovementActions
+    // PlayerController
+    private readonly InputActionMap m_PlayerController;
+    private IPlayerControllerActions m_PlayerControllerActionsCallbackInterface;
+    private readonly InputAction m_PlayerController_MoveX;
+    private readonly InputAction m_PlayerController_Jump;
+    private readonly InputAction m_PlayerController_Burst;
+    private readonly InputAction m_PlayerController_Down;
+    private readonly InputAction m_PlayerController_PositionMouse;
+    private readonly InputAction m_PlayerController_Shoot;
+    private readonly InputAction m_PlayerController_Update;
+    public struct PlayerControllerActions
     {
         private @PlayerInput m_Wrapper;
-        public PlayerMovementActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @MoveX => m_Wrapper.m_PlayerMovement_MoveX;
-        public InputAction @Jump => m_Wrapper.m_PlayerMovement_Jump;
-        public InputAction @Burst => m_Wrapper.m_PlayerMovement_Burst;
-        public InputAction @Down => m_Wrapper.m_PlayerMovement_Down;
-        public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
+        public PlayerControllerActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @MoveX => m_Wrapper.m_PlayerController_MoveX;
+        public InputAction @Jump => m_Wrapper.m_PlayerController_Jump;
+        public InputAction @Burst => m_Wrapper.m_PlayerController_Burst;
+        public InputAction @Down => m_Wrapper.m_PlayerController_Down;
+        public InputAction @PositionMouse => m_Wrapper.m_PlayerController_PositionMouse;
+        public InputAction @Shoot => m_Wrapper.m_PlayerController_Shoot;
+        public InputAction @Update => m_Wrapper.m_PlayerController_Update;
+        public InputActionMap Get() { return m_Wrapper.m_PlayerController; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(PlayerMovementActions set) { return set.Get(); }
-        public void SetCallbacks(IPlayerMovementActions instance)
+        public static implicit operator InputActionMap(PlayerControllerActions set) { return set.Get(); }
+        public void SetCallbacks(IPlayerControllerActions instance)
         {
-            if (m_Wrapper.m_PlayerMovementActionsCallbackInterface != null)
+            if (m_Wrapper.m_PlayerControllerActionsCallbackInterface != null)
             {
-                @MoveX.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMoveX;
-                @MoveX.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMoveX;
-                @MoveX.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMoveX;
-                @Jump.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnJump;
-                @Jump.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnJump;
-                @Jump.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnJump;
-                @Burst.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnBurst;
-                @Burst.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnBurst;
-                @Burst.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnBurst;
-                @Down.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnDown;
-                @Down.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnDown;
-                @Down.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnDown;
+                @MoveX.started -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnMoveX;
+                @MoveX.performed -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnMoveX;
+                @MoveX.canceled -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnMoveX;
+                @Jump.started -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnJump;
+                @Burst.started -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnBurst;
+                @Burst.performed -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnBurst;
+                @Burst.canceled -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnBurst;
+                @Down.started -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnDown;
+                @Down.performed -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnDown;
+                @Down.canceled -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnDown;
+                @PositionMouse.started -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnPositionMouse;
+                @PositionMouse.performed -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnPositionMouse;
+                @PositionMouse.canceled -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnPositionMouse;
+                @Shoot.started -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnShoot;
+                @Shoot.performed -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnShoot;
+                @Shoot.canceled -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnShoot;
+                @Update.started -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnUpdate;
+                @Update.performed -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnUpdate;
+                @Update.canceled -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnUpdate;
             }
-            m_Wrapper.m_PlayerMovementActionsCallbackInterface = instance;
+            m_Wrapper.m_PlayerControllerActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @MoveX.started += instance.OnMoveX;
@@ -267,10 +345,19 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Down.started += instance.OnDown;
                 @Down.performed += instance.OnDown;
                 @Down.canceled += instance.OnDown;
+                @PositionMouse.started += instance.OnPositionMouse;
+                @PositionMouse.performed += instance.OnPositionMouse;
+                @PositionMouse.canceled += instance.OnPositionMouse;
+                @Shoot.started += instance.OnShoot;
+                @Shoot.performed += instance.OnShoot;
+                @Shoot.canceled += instance.OnShoot;
+                @Update.started += instance.OnUpdate;
+                @Update.performed += instance.OnUpdate;
+                @Update.canceled += instance.OnUpdate;
             }
         }
     }
-    public PlayerMovementActions @PlayerMovement => new PlayerMovementActions(this);
+    public PlayerControllerActions @PlayerController => new PlayerControllerActions(this);
     private int m_KeyboardandMouseSchemeIndex = -1;
     public InputControlScheme KeyboardandMouseScheme
     {
@@ -280,11 +367,14 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
             return asset.controlSchemes[m_KeyboardandMouseSchemeIndex];
         }
     }
-    public interface IPlayerMovementActions
+    public interface IPlayerControllerActions
     {
         void OnMoveX(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnBurst(InputAction.CallbackContext context);
         void OnDown(InputAction.CallbackContext context);
+        void OnPositionMouse(InputAction.CallbackContext context);
+        void OnShoot(InputAction.CallbackContext context);
+        void OnUpdate(InputAction.CallbackContext context);
     }
 }

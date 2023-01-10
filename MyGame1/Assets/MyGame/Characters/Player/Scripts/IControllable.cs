@@ -8,7 +8,7 @@ public interface IControllable
 
     void Jump();
 
-    void Burst();
+    void Burst(float directionX);
 
     void Down();
 }

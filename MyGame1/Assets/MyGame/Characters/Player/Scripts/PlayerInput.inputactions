@@ -2,7 +2,7 @@
     "name": "PlayerInput",
     "maps": [
         {
-            "name": "PlayerMovement",
+            "name": "PlayerController",
             "id": "37db2c94-ddcd-4ba1-b00e-82da92deeef3",
             "actions": [
                 {
@@ -36,6 +36,33 @@
                     "name": "Down",
                     "type": "Button",
                     "id": "1e6da260-5587-4d72-b4ab-d76855ff9c5f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PositionMouse",
+                    "type": "Value",
+                    "id": "88bcd247-782a-4f25-9c6a-d27e844c4438",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Shoot",
+                    "type": "Button",
+                    "id": "85573970-2718-47f7-89c5-303457034f4f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Update",
+                    "type": "Button",
+                    "id": "e4e350b7-78eb-44bd-bd8b-133aea7ee812",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -106,6 +133,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Down",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d71781d9-44f3-4a32-ab08-138cfe8fc3c6",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PositionMouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1569f01f-b21e-4fad-af8e-9843d3d50db7",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f797d98d-5d00-4ac5-b556-ea7e9e19ad7a",
+                    "path": "<Keyboard>/j",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "Update",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
