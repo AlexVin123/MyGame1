@@ -11,11 +11,10 @@ public class PlayerInputController : MonoBehaviour
 
     private IControllable _controllable;
     private PlayerInput _input;
-    private DefenitionCollisions _defenitionCollisions;
+
 
     private void Awake()
     {
-        _defenitionCollisions = GetComponent<DefenitionCollisions>();
         _input = new PlayerInput();
         _controllable = GetComponent<IControllable>();
 
@@ -63,7 +62,6 @@ public class PlayerInputController : MonoBehaviour
 
     private void OnJump(InputAction.CallbackContext obj)
     {
-        if (_defenitionCollisions.IsGround)
             _controllable.Jump();
     }
 

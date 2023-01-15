@@ -34,7 +34,6 @@ public class DefenitionCollisions : MonoBehaviour
     {
         var hit = new RaycastHit2D[1];
         var countCollision = _rigidbody2D.Cast(-transform.up, hit, _distansCheckDown);
-        Debug.Log(countCollision > 0);
         IsGround = countCollision > 0;
     }
 }

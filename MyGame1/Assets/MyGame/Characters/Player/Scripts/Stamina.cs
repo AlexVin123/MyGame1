@@ -2,39 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Stamina : MonoBehaviour
+public class Stamina : Ability
 {
-    [SerializeField] private int _maxCount;
-    [SerializeField] private float _recoveryTime;
-
+    private StaminaCount _maxCout;
+    private StaminaDelay _delay;
     private int _currentCount;
-
     private float _timer;
 
     public bool IsExist { get { return _currentCount > 0; } }
 
-    private void Awake()
+    public Stamina(DataBasePlayer dataBasePlayer, Rigidbody2D rb) : base(dataBasePlayer, rb){}
+
+    public override void SetParameter()
     {
-        _currentCount = _maxCount;
+        _maxCout = (StaminaCount)DataBasePlayer.GetParameter(ParametersPlayer.StaminaCount);
+        _delay = (StaminaDelay)DataBasePlayer.GetParameter(ParametersPlayer.StaminaDelay);
     }
 
-    private void Update()
+    public IEnumerator Timer()
     {
-        if (_currentCount != _maxCount)
+        while(_currentCount < _maxCout.Value)
         {
-            Timer();
-        }
-    }
+            _timer += Time.deltaTime;
 
-    private void Timer()
-    {
-        _timer += Time.deltaTime;
-
-        if (_timer >= _recoveryTime)
-        {
-            _timer = 0;
-            _currentCount++;
-            Debug.Log(_currentCount);
+            if(_timer >= _delay.Value)
+            {
+                _currentCount++;
+                _timer = 0;
+            }
+            yield return null;
         }
     }
 
