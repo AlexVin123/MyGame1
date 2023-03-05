@@ -5,10 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour, IControllable
 {
-    private DataBasePlayer _dataBasePlayer;
-
-    private List<Ability> abilities;
-
+    private DataBasePlayer _characterData;
     private MovementDirectionX _movementDirectionX;
     private Jump _jump;
     private BurstDown _down;
@@ -16,32 +13,25 @@ public class Player : MonoBehaviour, IControllable
     private Rigidbody2D _rigidbody2D;
     private Stamina _stamina;
     private DefenitionCollisions _defenitionCollisions;
+    private Health _health;
 
     public void Init()
     {
-        abilities = new List<Ability>();
+        _characterData.Chainge.AddListener(Init);
         _defenitionCollisions = GetComponent<DefenitionCollisions>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
-        _movementDirectionX = new MovementDirectionX(_dataBasePlayer, _rigidbody2D);
-        _jump = new Jump(_dataBasePlayer, _rigidbody2D);
-        _burst = new Burst(_dataBasePlayer, _rigidbody2D);
-        _stamina = new Stamina(_dataBasePlayer, _rigidbody2D);
-        _down = new BurstDown(_dataBasePlayer, _rigidbody2D);
-        abilities.Add(_movementDirectionX);
-        abilities.Add(_jump);
-        abilities.Add(_burst);
-        abilities.Add(_stamina);
-        abilities.Add(_down);
+        _movementDirectionX = new MovementDirectionX(_characterData.MaxSpeed, _rigidbody2D);
+        _jump = new Jump(_characterData.ForgeJump, _rigidbody2D);
+        _burst = new Burst(_characterData.DictanceBurst, _rigidbody2D);
+        _stamina = new Stamina(_characterData.CountStamina, _characterData.DelayStamina, _rigidbody2D);
+        _down = new BurstDown(_rigidbody2D);
+        _health = new Health(_characterData.MaxHealth);
 
-        foreach (var ability in abilities)
-        {
-            ability.SetParameter();
-        }
     }
 
-    public void SerDataBase(DataBasePlayer dataBasePlayer)
+    public void SetDataBase(DataBasePlayer dataBasePlayer)
     {
-        _dataBasePlayer = dataBasePlayer;
+        _characterData = dataBasePlayer;
     }
 
     public void Burst(float directionX)
@@ -51,6 +41,7 @@ public class Player : MonoBehaviour, IControllable
             StartCoroutine(_burst.StartBurst(directionX));
             _stamina.Spend();
             StartCoroutine(_stamina.Timer());
+            Debug.Log("UUUU");
         }
     }
 
@@ -60,12 +51,14 @@ public class Player : MonoBehaviour, IControllable
         {
             _down.StartDown();
             _stamina.Spend();
+            StartCoroutine(_stamina.Timer());
         }
     }
 
     public void Jump()
     {
-        _jump.StartJump(_defenitionCollisions);
+        if (_defenitionCollisions.IsGround)
+            _jump.StartJump(_defenitionCollisions);
     }
 
     public void Move(float directoinX)

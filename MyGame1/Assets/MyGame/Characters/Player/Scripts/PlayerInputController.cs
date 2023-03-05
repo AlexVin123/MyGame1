@@ -27,6 +27,7 @@ public class PlayerInputController : MonoBehaviour
         _input.PlayerController.Burst.performed += OnBurst;
         _input.PlayerController.Down.performed += OnDown;
         _input.PlayerController.Update.performed += OnOpenMenu;
+        _input.PlayerController.Shoot.performed += OnShoot;
     }
 
     private void OnDisable()
@@ -36,6 +37,7 @@ public class PlayerInputController : MonoBehaviour
         _input.PlayerController.Burst.performed -= OnBurst;
         _input.PlayerController.Down.performed -= OnDown;
         _input.PlayerController.Update.performed -= OnOpenMenu;
+        _input.PlayerController.Shoot.performed -= OnShoot;
     }
 
     private void FixedUpdate()
@@ -63,6 +65,11 @@ public class PlayerInputController : MonoBehaviour
     private void OnJump(InputAction.CallbackContext obj)
     {
             _controllable.Jump();
+    }
+
+    private void OnShoot(InputAction.CallbackContext obj)
+    {
+        _weapon.Shoot();
     }
 
     private void ReadAim()

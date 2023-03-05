@@ -47,6 +47,7 @@ ScriptedImporter:
     flipbookRows: 0
     flipbookColumns: 0
     ignorePngGamma: 0
+    cookieMode: 0
     filterMode: 1
     aniso: 1
     mipBias: 0
@@ -89,6 +90,7 @@ ScriptedImporter:
     tessellationDetail: 0
     parentGroupIndex: -1
     uvTransform: {x: 0, y: 0}
+    spritePosition: {x: 0, y: 0}
   mosaicSpriteImportData: []
   rigSpriteImportData:
   - name: "\u0421\u043B\u043E\u0439 2 \u043A\u043E\u043F\u0438\u044F"
@@ -111,7 +113,8 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     parentGroupIndex: -1
-    uvTransform: {x: -41, y: 422}
+    uvTransform: {x: 4, y: 422}
+    spritePosition: {x: 45, y: 0}
   - name: "\u0421\u043B\u043E\u0439 2 \u043A\u043E\u043F\u0438\u044F 2"
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -132,7 +135,8 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     parentGroupIndex: -1
-    uvTransform: {x: -35, y: 560}
+    uvTransform: {x: 4, y: 660}
+    spritePosition: {x: 39, y: 100}
   - name: "\u0421\u043B\u043E\u0439 2"
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -153,7 +157,8 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     parentGroupIndex: -1
-    uvTransform: {x: 4, y: -52}
+    uvTransform: {x: 4, y: 4}
+    spritePosition: {x: 0, y: 56}
   - name: "\u0421\u043B\u043E\u0439 2 \u043A\u043E\u043F\u0438\u044F 4"
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -174,7 +179,8 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     parentGroupIndex: -1
-    uvTransform: {x: -332, y: 678}
+    uvTransform: {x: 4, y: 778}
+    spritePosition: {x: 336, y: 100}
   - name: "\u0421\u043B\u043E\u0439 2 \u043A\u043E\u043F\u0438\u044F 3"
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -195,7 +201,8 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     parentGroupIndex: -1
-    uvTransform: {x: -218, y: 541}
+    uvTransform: {x: 4, y: 541}
+    spritePosition: {x: 222, y: 0}
   characterData:
     bones: []
     parts: []
@@ -280,7 +287,7 @@ ScriptedImporter:
     spriteName: 
     isGroup: 0
     parentIndex: -1
-    spriteID: 00000000000000000000000000000000
+    spriteID: 2246667b1156de14baedd5880dbd89e5
     layerID: 1
     mosaicPosition: {x: 0, y: 0}
     flatten: 0
