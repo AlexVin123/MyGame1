@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class DataBasePlayer
+public class DataBasePlayer: DataBase
 {
     public UnityEvent Chainge;
 
@@ -20,6 +20,7 @@ public class DataBasePlayer
     public int CountStamina => GetValueInt(TypeParameter.CountStamina);
 
     public int MaxHealth => GetValueInt(TypeParameter.MaxHealth);
+
 
     public DataBasePlayer(Dictionary<TypeParameter,Parameter> parameters)
     {
@@ -60,5 +61,10 @@ public class DataBasePlayer
     public int GetCurrentLvlParameter(TypeParameter type)
     {
         return _parameters[type].Lvl;
+    }
+
+    public override string GetParameter(TypeParameter parameter)
+    {
+        return _parameters[parameter].Value;
     }
 }

@@ -2,18 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Health
+public class Health : Ability
 {
     private float _health;
-    private int _maxHealth;
+    private float _maxHealth;
+
+    public float CurrentHealth => _health;
 
     public bool IsDie => _health == 0;
-
-    public Health(int maxHealth)
-    {
-        _maxHealth = maxHealth;
-        _health = maxHealth;
-    }
 
     public void Heal(float value)
     {
@@ -25,6 +21,12 @@ public class Health
         {
             _health += value;
         }
+    }
+
+    public override void Init(DataBase dataPlayer)
+    {
+        _maxHealth = float.Parse(dataPlayer.GetParameter(TypeParameter.MaxHealth));
+        _health = _maxHealth;
     }
 
     public void TakeDamage(float damage)

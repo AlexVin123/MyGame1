@@ -4,5 +4,5 @@ using UnityEngine;
 
 public enum TypeParameter
 {
-    MaxSpeedMovement, DistanceBurst, ForgeJump, DelayStamina, CountStamina, MaxHealth
+    MaxSpeedMovement, DistanceBurst, ForgeJump, DelayStamina, CountStamina, MaxHealth,Damage
 }

@@ -20,13 +20,6 @@ public class AbilityDataBase:ScriptableObject
         {
             _parameters.Add(t.CreateString());
         }
-
-        Debug.Log("f");
-
-        foreach (var param in _parameters)
-        {
-            Debug.Log("FFFF"+ param.TypeParameter);
-        }
     }
 
     private void ConvertParameters<T,B>(List<T> parameters) where T : VievLvlsParameter<B>

@@ -170,6 +170,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Test",
+            "id": "70e631a7-57e1-42a0-ac53-f8310d58509d",
+            "actions": [
+                {
+                    "name": "PosMouse",
+                    "type": "Value",
+                    "id": "cf5ea1d9-2203-4079-8fa7-b5c22e3de518",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "940e8d97-c1af-420e-9e70-422c5670db7a",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PosMouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

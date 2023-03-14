@@ -11,4 +11,8 @@ public interface IControllable
     void Burst(float directionX);
 
     void Down();
+
+    void Shoot();
+
+    void Aim(Vector2 mousePosition);
 }

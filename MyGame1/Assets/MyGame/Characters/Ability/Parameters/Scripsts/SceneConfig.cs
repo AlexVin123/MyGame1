@@ -9,6 +9,8 @@ public class SceneConfig : MonoBehaviour
     [SerializeField] private Player _player;
     [SerializeField] private AbilityDataBase _abilityDataBase;
     [SerializeField] private List<ButtonUpgrate> buttons;
+    [SerializeField] private Bar _healthBar;
+    [SerializeField] private StaminaUI _staminaUI;
 
     private DataBasePlayer _playerData;
     private SystemUpgrade systemUpgrade;
@@ -19,6 +21,7 @@ public class SceneConfig : MonoBehaviour
         _playerData = _abilityDataBase.CreateDataBasePlayer();
         _player.SetDataBase(_playerData);
         _player.Init();
+        _staminaUI.Init(int.Parse(_playerData.GetParameter(TypeParameter.CountStamina)));
         systemUpgrade = new SystemUpgrade(_playerData, _abilityDataBase);
         ButtonInit();
         PoasitionPlayer = _player.transform.position;

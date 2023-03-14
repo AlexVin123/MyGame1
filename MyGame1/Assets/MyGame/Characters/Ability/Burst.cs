@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Burst : Ability
+public class Burst : AbilityRB
 {
-    private float _forgeBurst;
+    [SerializeField] private float _forgeBurst = 70f;
     private float _distanceBurst;
     private bool _isBurst = false;
     private Vector2 _targetPoint;
 
-    public Burst(float distanceBurst, Rigidbody2D rb) : base(rb)
+    public override void Init(DataBase dataPlayer)
     {
-        _distanceBurst = distanceBurst;
-        _forgeBurst = 70f;
+        base.Init(dataPlayer);
+        _distanceBurst = float.Parse(dataPlayer.GetParameter(TypeParameter.DistanceBurst));
+        Debug.Log(_distanceBurst);
     }
 
     public IEnumerator StartBurst(float directionX)
@@ -21,19 +22,19 @@ public class Burst : Ability
         
         if (_isBurst == false)
         {
-            Rigidbody2D.velocity = Vector2.zero;
-            _targetPoint = new Vector2(Rigidbody2D.position.x + _distanceBurst * directionX, Rigidbody2D.position.y);
-            gravityScale = Rigidbody2D.gravityScale;
-            Rigidbody2D.gravityScale = 0;
+            Rigidbody.velocity = Vector2.zero;
+            _targetPoint = new Vector2(Rigidbody.position.x + _distanceBurst * directionX, Rigidbody.position.y);
+            gravityScale = Rigidbody.gravityScale;
+            Rigidbody.gravityScale = 0;
             _isBurst = true;
         }
 
-        while (Mathf.Round(Rigidbody2D.position.x) != Mathf.Round(_targetPoint.x))
+        while (Mathf.Round(Rigidbody.position.x) != Mathf.Round(_targetPoint.x))
         {
-            Rigidbody2D.position = Vector2.MoveTowards(Rigidbody2D.position, _targetPoint, _forgeBurst * Time.deltaTime);
+            Rigidbody.position = Vector2.MoveTowards(Rigidbody.position, _targetPoint, _forgeBurst * Time.deltaTime);
             yield return null;
         }
-        Rigidbody2D.gravityScale = gravityScale;
+        Rigidbody.gravityScale = gravityScale;
         _isBurst = false;
     }
 }

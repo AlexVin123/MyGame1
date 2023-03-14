@@ -2,18 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Jump : Ability
+public class Jump : AbilityRB
 {
     private float _forge;
 
-    public Jump(float forge, Rigidbody2D rb) : base( rb)
+    public override void Init(DataBase dataPlayer)
     {
-        _forge = forge;
+        base.Init(dataPlayer);
+        _forge = float.Parse(dataPlayer.GetParameter(TypeParameter.ForgeJump));
     }
 
-    public void StartJump(DefenitionCollisions defenitionCollisions)
+    public void StartJump()
     {
 
-        Rigidbody2D.AddForce(new Vector2(0f, 1 * _forge), ForceMode2D.Impulse);
+        Rigidbody.AddForce(new Vector2(0f, 1 * _forge), ForceMode2D.Impulse);
     }
 }

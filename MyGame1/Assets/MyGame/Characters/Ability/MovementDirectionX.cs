@@ -2,24 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovementDirectionX : Ability
+public class MovementDirectionX : AbilityRB
 {
+    [SerializeField]private float _accelerate = 40;
     private float _maxSpeed;
-    private float _accelerate;
     private float _speed;
     private float _targetSpeed;
 
-    public MovementDirectionX(float maxSpeed, Rigidbody2D rb) : base(rb)
+    public override void Init(DataBase dataPlayer)
     {
-        _maxSpeed = maxSpeed;
-        _accelerate = 35f;
+        base.Init(dataPlayer);
+        _maxSpeed = float.Parse(dataPlayer.GetParameter(TypeParameter.MaxSpeedMovement));
     }
 
     public void Move(float directionX)
     {
-        Debug.Log("MaxSpeed:" + _maxSpeed);
         _targetSpeed = _maxSpeed * directionX;
         _speed = Mathf.Lerp(_speed, _targetSpeed, _accelerate * Time.deltaTime);
-        Rigidbody2D.velocity = new Vector2(_speed, Rigidbody2D.velocity.y);
+        Rigidbody.velocity = new Vector2(_speed, Rigidbody.velocity.y);
     }
 }

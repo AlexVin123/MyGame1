@@ -2,48 +2,57 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class State<T> : ScriptableObject where T : Enemy
+[System.Serializable]
+public abstract class State<T> : MonoBehaviour where T : Enemy
 {
-    protected T Enemy;
-    protected GameObject _target;
     [SerializeField]private List<Transition<T>> _transitions;
+    [SerializeField]private TypeState _typeState;
+
+    protected T Enemy;
+    protected GameObject Target;
+
+    public TypeState NameState => _typeState;
     
-    public void Init(T enemy, GameObject target)
+    public virtual void Init(T enemy, GameObject target)
     {
-        _target = target;
+        Target = target;
         Enemy = enemy;
     }
-
      
     public virtual void Enter()
     {
-        foreach (var transition in _transitions)
+        if (enabled == false)
         {
-            transition.Init(_target, Enemy);
+            enabled = true;
+
+            foreach (var transition in _transitions)
+            {
+                transition.Init(Target, Enemy);
+                transition.enabled = true;
+            }
         }
+        
     }
+
+    protected virtual void Update() { }
 
     public virtual void Exit()
     {
-
-    }
-
-    public abstract void Update();
-
-    protected void Check()
-    {
-        foreach(var transition in _transitions)
+        if (enabled == true)
         {
-            transition.ConditionalTest();
+            foreach (var transition in _transitions)
+                transition.enabled = false;
+
+            enabled = false;
         }
     }
 
     public State<T> GetNextState()
     {
-        foreach(var tran in _transitions)
+        foreach(Transition<T> transition in _transitions)
         {
-            if (tran.NeedTransit == true)
-                return tran.State;
+            if (transition.NeedTransit == true)
+                return transition.State;
         }
         return null;
     }

@@ -25,8 +25,6 @@ public abstract class VievLvlsParameter<T> : ScriptableObject
 
         LvlParameter<string> par = new LvlParameter<string>(parameters,_type);
 
-        Debug.Log(par);
-
         return par;
     }
 }
