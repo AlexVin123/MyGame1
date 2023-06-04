@@ -1,74 +1,119 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(Health))]
-public abstract class Enemy : MonoBehaviour
+
+public class Enemy : MonoBehaviour
 {
-    [SerializeField]protected EnemyParameterData Parameters;
-    [SerializeField] protected ControllerEnemyAnimations Anim;
-    private SpriteRenderer[] _renders;
+    private List<ITarget> _targets;
+    private Dictionary<TypeAbility, Ability> _abilitiesDictionary;
+    private SpriteRenderer[] _spriteEnemy;
+    private TargetSearch _targetSearch;
     private Health _health;
+    private StateMachine _machine;
 
-    protected Rigidbody2D Rigidbody;
+    public event Action OnDyingEvent;
 
-    private float _timer;
-    private Color _currentCollor;
-
-    public void Update()
+    private void Update()
     {
-        if(_timer > 0)
-        {
-            _timer -= Time.deltaTime;
-        }
+        if (CurrentTarget != null && CurrentTarget.Position().x > transform.position.x)
+            transform.rotation = new Quaternion(0,0,0,0);
+        else
+            transform.rotation = new Quaternion(0,180,0,0);
+    }
 
-        if(_timer<= 0)
+    public ITarget CurrentTarget
+    {
+        get
         {
-            ChaingeColor(_currentCollor);
+            if(_targets != null && _targets.Count != 0)
+            {
+                return _targets[_targets.Count - 1];
+            }
+
+            return null;
         }
     }
 
-    public virtual void Init(GameObject target)
+    public void PerformAbility(TypeAbility typeAbility)
     {
-        Anim.Init();
-        Rigidbody = GetComponent<Rigidbody2D>();
+        _abilitiesDictionary[typeAbility].Perform();
+    }
+
+    public void PerformAbility(TypeAbility typeAbility, float directionX)
+    {
+        _abilitiesDictionary[typeAbility].Perform(directionX);
+    }
+
+    public void PerformAbility(TypeAbility typeAbility, Vector2 direction)
+    {
+        _abilitiesDictionary[typeAbility].Perform(direction);
+    }
+
+    public virtual void Init(ITarget target = null)
+    {
+        _machine = GetComponent<StateMachine>();
+        InitAbility();
+        _machine.Init(this);
+        _targets = new List<ITarget>();
+        _spriteEnemy = GetComponentsInChildren<SpriteRenderer>();
+        _targetSearch = GetComponentInChildren<TargetSearch>();
+        _targetSearch.OnTargetEnteredEvent += AddTarget;
+        _targetSearch.OnTargetExitedEvent += RemoveTarget;
         _health = GetComponent<Health>();
-        _health.Init(Parameters);
-        _renders = GetComponentsInChildren<SpriteRenderer>();
-        _currentCollor = _renders[0].color;
+        _health.Init(null);
+
+        if (target != null)
+            _targets.Add(target);
     }
-
-    public abstract void Move(Vector2 direction);
-
-    public abstract void Attack();
 
     public void TakeDamage(float damage)
     {
-        ChaingeColor(Color.red);
-        _timer = 0.2f;
         _health.TakeDamage(damage);
-        if (_health.IsDie)
+        Debug.Log("Enemy take damage: " + damage);
+
+        if (_health.CurrentHealth == 0)
         {
             Die();
         }
     }
 
+    private void AddTarget(ITarget target)
+    {
+        _targets.Add(target);
+    }
+
+    private void RemoveTarget(ITarget target)
+    {
+        for (int i = 0; i < _targets.Count; i++)
+        {
+            if (_targets[i] == target)
+            {
+                _targets.RemoveAt(i);
+                return;
+            }
+        }
+    }
+
     private void Die()
     {
+        OnDyingEvent?.Invoke();
+        OnDyingEvent = null;
         gameObject.SetActive(false);
     }
 
-    private void ChaingeColor(Color color)
+    private void InitAbility()
     {
-        if(_renders != null)
+        var abilities = GetComponents<Ability>();
+        _abilitiesDictionary = new Dictionary<TypeAbility, Ability>();
+
+        foreach (var ability in abilities)
         {
-            foreach (var r in _renders)
-            {
-                r.color = color;
-            }
+            ability.Init(null);
+            _abilitiesDictionary.Add(ability.TypeAbility, ability);
         }
-   
     }
 }

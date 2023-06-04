@@ -1,19 +1,36 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : Ability
+public class Health : MonoBehaviour
 {
     private float _health;
-    private float _maxHealth;
+    [SerializeField] private float _maxHealth;
+    [SerializeField] private Bar _healthBar;
+
+    private event Action<float, float> _OnChangedHealtEvent;
+
+    public float MaxHealth => _maxHealth;
 
     public float CurrentHealth => _health;
 
-    public bool IsDie => _health == 0;
+    private void OnEnable()
+    {
+        if (_healthBar != null)
+            _OnChangedHealtEvent += _healthBar.ChaingeBar;
+
+    }
+
+    private void OnDisable()
+    {
+        if (_healthBar != null)
+            _OnChangedHealtEvent -= _healthBar.ChaingeBar;
+    }
 
     public void Heal(float value)
     {
-        if(_health + value > _maxHealth)
+        if (_health + value > _maxHealth)
         {
             _health = _maxHealth;
         }
@@ -21,17 +38,26 @@ public class Health : Ability
         {
             _health += value;
         }
+
+        _OnChangedHealtEvent?.Invoke(_health, _maxHealth);
     }
 
-    public override void Init(DataBase dataPlayer)
+    public void Init(ICharacterParameters parameters)
     {
-        _maxHealth = float.Parse(dataPlayer.GetParameter(TypeParameter.MaxHealth));
+        if (parameters != null)
+        {
+            if (float.TryParse(parameters.GetValue(TypeParameter.MaxHealth), out float result))
+                _maxHealth = result;
+            else
+                throw new System.ArgumentException("Конвертация не возможна, измените параметер на float");
+
+        }
         _health = _maxHealth;
     }
 
     public void TakeDamage(float damage)
     {
-        if(_health > damage)
+        if (_health > damage)
         {
             _health -= damage;
         }
@@ -39,5 +65,7 @@ public class Health : Ability
         {
             _health = 0;
         }
+
+        _OnChangedHealtEvent?.Invoke(_health, _maxHealth);
     }
 }

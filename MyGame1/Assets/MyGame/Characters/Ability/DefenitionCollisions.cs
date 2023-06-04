@@ -5,6 +5,7 @@ using UnityEngine;
 public class DefenitionCollisions : MonoBehaviour
 {
     [SerializeField] private float _distansCheckDown;
+    [SerializeField] private ContactFilter2D _filter;
 
     private Rigidbody2D _rigidbody2D;
 
@@ -33,7 +34,7 @@ public class DefenitionCollisions : MonoBehaviour
     private void GroundCheck()
     {
         var hit = new RaycastHit2D[1];
-        var countCollision = _rigidbody2D.Cast(-transform.up, hit, _distansCheckDown);
+        var countCollision = _rigidbody2D.Cast(-transform.up,_filter, hit, _distansCheckDown);
         IsGround = countCollision > 0;
     }
 }

@@ -4,20 +4,26 @@ using UnityEngine;
 
 public class MovementDirectionX : AbilityRB
 {
-    [SerializeField]private float _accelerate = 40;
-    private float _maxSpeed;
+    [SerializeField] private float _accelerate = 40;
+    [SerializeField] private float _maxSpeed;
     private float _speed;
     private float _targetSpeed;
 
-    public override void Init(DataBase dataPlayer)
+    public override void Init(ICharacterParameters parametrs)
     {
-        base.Init(dataPlayer);
-        _maxSpeed = float.Parse(dataPlayer.GetParameter(TypeParameter.MaxSpeedMovement));
+        base.Init(parametrs);
+        if (parametrs != null)
+        {
+            if (float.TryParse(parametrs.GetValue(TypeParameter.MaxSpeedMovement), out float result))
+                _maxSpeed = result;
+            else
+                throw new System.FormatException("Конвертация не возможна, измените параметер на float");
+        }
     }
 
-    public void Move(float directionX)
+    public override void Perform(Vector2 direction)
     {
-        _targetSpeed = _maxSpeed * directionX;
+        _targetSpeed = _maxSpeed * direction.x;
         _speed = Mathf.Lerp(_speed, _targetSpeed, _accelerate * Time.deltaTime);
         Rigidbody.velocity = new Vector2(_speed, Rigidbody.velocity.y);
     }

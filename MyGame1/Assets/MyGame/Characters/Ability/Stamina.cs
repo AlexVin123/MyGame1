@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Stamina:Ability
+public class Stamina:MonoBehaviour
 {
     private int _maxCout;
     private float _delay;
@@ -14,6 +14,8 @@ public class Stamina:Ability
     public static UnityEvent<int> ChaigeCount = new UnityEvent<int>(); 
 
     public bool IsExist { get { return _currentCount > 0; } }
+
+    public int MaxCout => _maxCout;
 
     private void Update()
     {
@@ -42,11 +44,22 @@ public class Stamina:Ability
         ChaigeCount?.Invoke(_currentCount);
     }
 
-    public override void Init(DataBase dataPlayer)
+    public void Init(ICharacterParameters parameters)
     {
-        _maxCout = int.Parse(dataPlayer.GetParameter(TypeParameter.CountStamina));
-        _delay = float.Parse(dataPlayer.GetParameter(TypeParameter.DelayStamina));
+        if (parameters != null)
+        {
+            if (float.TryParse(parameters.GetValue(TypeParameter.DelayStamina), out float result))
+                _delay = result;
+            else
+                throw new System.FormatException("Конвертация не возможна, измените параметер на float");
+
+            if (int.TryParse(parameters.GetValue(TypeParameter.CountStamina), out int result2))
+                _maxCout = result2;
+            else
+                throw new System.FormatException("Конвертация не возможна, измените параметер на int");
+        }
+
         _currentCount = _maxCout;
-        Debug.Log(_maxCout + "+111111111111111+" + _delay);
+        _timer = 0;
     }
 }

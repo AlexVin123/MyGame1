@@ -9,7 +9,7 @@
                     "name": "MoveX",
                     "type": "Value",
                     "id": "4e0a9f23-7d56-401f-9cdd-1090f672a8dc",
-                    "expectedControlType": "Axis",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -71,9 +71,9 @@
             ],
             "bindings": [
                 {
-                    "name": "1D Axis",
+                    "name": "2D Vector",
                     "id": "15ac8cd3-16f7-4347-b070-a029a1d36869",
-                    "path": "1DAxis",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -82,23 +82,23 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "negative",
-                    "id": "99fded75-5362-4653-b066-3a4634aec449",
+                    "name": "Left",
+                    "id": "4472cc60-38aa-4c6a-985d-6d9e9c52cce7",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard and Mouse",
+                    "groups": "",
                     "action": "MoveX",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "positive",
-                    "id": "30ba0261-3651-4bfb-ba2b-3c48eb6064f0",
+                    "name": "Right",
+                    "id": "456a3ad7-68b2-430e-9274-19f4d0a2fef2",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard and Mouse",
+                    "groups": "",
                     "action": "MoveX",
                     "isComposite": false,
                     "isPartOfComposite": true

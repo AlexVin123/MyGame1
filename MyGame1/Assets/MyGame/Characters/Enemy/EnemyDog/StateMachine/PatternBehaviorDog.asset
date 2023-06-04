@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb9e1bae564f8349b8f4f2de2a87012, type: 3}
+  m_Name: PatternBehaviorDog
+  m_EditorClassIdentifier: 
+  _states:
+  - _typeState: 2
+    _transits:
+    - {fileID: 11400000, guid: 0e83c632f965ebf48bddcddce7968de6, type: 2}
+    - {fileID: 11400000, guid: 60ba774c35e1f664eb9fb4942e7225a9, type: 2}
+  - _typeState: 1
+    _transits:
+    - {fileID: 11400000, guid: 94613dc167f315948a4d80ebeac37d51, type: 2}
+    - {fileID: 11400000, guid: 60ba774c35e1f664eb9fb4942e7225a9, type: 2}
+  - _typeState: 3
+    _transits:
+    - {fileID: 11400000, guid: 94613dc167f315948a4d80ebeac37d51, type: 2}

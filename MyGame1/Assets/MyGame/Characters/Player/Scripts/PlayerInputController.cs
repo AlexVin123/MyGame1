@@ -59,8 +59,8 @@ public  class PlayerInputController : MonoBehaviour
 
     private void OnBurst(InputAction.CallbackContext obj)
     {
-        float directionX = _input.PlayerController.MoveX.ReadValue<float>();
-        _controllable.Burst(directionX);
+        Vector2 direction = _input.PlayerController.MoveX.ReadValue<Vector2>();
+        _controllable.Burst(direction);
     }
 
     private void OnJump(InputAction.CallbackContext obj)
@@ -81,10 +81,10 @@ public  class PlayerInputController : MonoBehaviour
 
     private void ReadMove()
     {
-        float directionX = _input.PlayerController.MoveX.ReadValue<float>();
-        _controllable.Move(directionX);
+        Vector2 direction = _input.PlayerController.MoveX.ReadValue<Vector2>();
+        _controllable.Move(direction);
 
-        if(directionX == 0)
+        if(direction.x == 0)
         {
             _animator.SetBool(ParameterOnWalk, false);
         }

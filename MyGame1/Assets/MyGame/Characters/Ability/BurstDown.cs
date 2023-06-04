@@ -5,18 +5,20 @@ using UnityEngine;
 public class BurstDown : AbilityRB
 {
     [SerializeField]private float _forg = 50f;
+    [SerializeField] private Explosion _explosion;
 
     private bool _isDamage = false;
     private float _damage;
     private float _forge;
 
-    public override void Init(DataBase dataPlayer)
+    public override void Init(ICharacterParameters parameters)
     {
-        base.Init(dataPlayer);
+        base.Init(parameters);
     }
 
-    public void StartDown()
+    public override void Perform()
     {
+        _explosion.Active = true;
         Rigidbody.velocity = Vector2.zero;
         Rigidbody.AddForce(new Vector2(0f, -1 * _forg), ForceMode2D.Impulse);
     }

@@ -4,5 +4,15 @@ using UnityEngine;
 
 public abstract class Ability:MonoBehaviour
 {
-    public abstract void Init(DataBase dataPlayer);
+    [SerializeField] private TypeAbility _typeAbility;
+
+    public TypeAbility TypeAbility => _typeAbility;
+    public abstract void Init(ICharacterParameters parameters);
+
+    public virtual void Perform() { }
+
+    public virtual void Perform(float directionX) { }
+
+    public virtual void Perform(Vector2 direction) { }
+
 }

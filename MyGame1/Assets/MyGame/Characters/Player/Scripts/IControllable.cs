@@ -4,11 +4,11 @@ using UnityEngine;
 
 public interface IControllable
 {
-    void Move(float directoinX);
+    void Move(Vector2 directoin);
 
     void Jump();
 
-    void Burst(float directionX);
+    void Burst(Vector2 direction);
 
     void Down();
 

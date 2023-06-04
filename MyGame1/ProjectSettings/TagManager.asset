@@ -8,16 +8,16 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Enemy
+  - ItermFrontPlayer
+  - ItemForPlayer
+  - ShootPlayer
+  - JumpPayer
+  - Ground
+  - End
   - 
   - 
   - 
@@ -40,4 +40,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: ItemForPlayer
+    uniqueID: 3051403137
+    locked: 0
+  - name: Enemy
+    uniqueID: 37086395
+    locked: 0
+  - name: Player
+    uniqueID: 221156225
+    locked: 0
+  - name: ItermFrontPlayer
+    uniqueID: 1716785025
     locked: 0

@@ -4,5 +4,5 @@ using UnityEngine;
 
 public enum TypeState
 {
-    Move, Idle,Attack
+    NotState,Idle, Walk, Attack, State1, State2, State3,
 }

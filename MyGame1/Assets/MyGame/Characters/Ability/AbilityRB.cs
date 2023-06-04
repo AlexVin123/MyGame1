@@ -7,7 +7,7 @@ public abstract class AbilityRB : Ability
 {
     protected Rigidbody2D Rigidbody;
 
-    public override void Init(DataBase dataPlayer)
+    public override void Init(ICharacterParameters parameters)
     {
         Rigidbody = GetComponent<Rigidbody2D>();
     }

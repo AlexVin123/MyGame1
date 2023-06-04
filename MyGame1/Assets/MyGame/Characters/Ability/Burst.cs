@@ -1,29 +1,40 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Burst : AbilityRB
 {
     [SerializeField] private float _forgeBurst = 70f;
-    private float _distanceBurst;
+    [SerializeField] private float _distanceBurst;
     private bool _isBurst = false;
     private Vector2 _targetPoint;
 
-    public override void Init(DataBase dataPlayer)
+    public override void Init(ICharacterParameters parameters)
     {
-        base.Init(dataPlayer);
-        _distanceBurst = float.Parse(dataPlayer.GetParameter(TypeParameter.DistanceBurst));
-        Debug.Log(_distanceBurst);
+        base.Init(parameters);
+
+        if (parameters != null)
+        {
+
+            if (float.TryParse(parameters.GetValue(TypeParameter.DistanceBurst), out float result))
+                _distanceBurst = result;
+            else
+                throw new System.ArgumentException("Конвертация невозможна, поменяйте данные на float");
+        }
     }
 
-    public IEnumerator StartBurst(float directionX)
+    public override void Perform(Vector2 direction)
+    {
+        StartCoroutine(StartBurst(direction));
+    }
+
+    public IEnumerator StartBurst(Vector2 direction)
     {
         float gravityScale = 0;
-        
+
         if (_isBurst == false)
         {
             Rigidbody.velocity = Vector2.zero;
-            _targetPoint = new Vector2(Rigidbody.position.x + _distanceBurst * directionX, Rigidbody.position.y);
+            _targetPoint = new Vector2(Rigidbody.position.x + _distanceBurst * direction.x, Rigidbody.position.y);
             gravityScale = Rigidbody.gravityScale;
             Rigidbody.gravityScale = 0;
             _isBurst = true;

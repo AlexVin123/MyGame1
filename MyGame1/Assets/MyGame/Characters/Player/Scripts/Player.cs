@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,17 +11,13 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Jump))]
 [RequireComponent(typeof(MovementDirectionX))]
 [RequireComponent(typeof(Rigidbody2D))]
-public class Player : MonoBehaviour, IControllable
+public class Player : MonoBehaviour, IControllable, ITarget
 {
-    [SerializeField] private Camera _camera;
     [SerializeField] private Transform _torso;
     [SerializeField] private Transform _leg;
+    [SerializeField] private PlayerParameters _parameters;
 
-    private DataBasePlayer _characterData;
-    private MovementDirectionX _movementDirectionX;
-    private Jump _jump;
-    private BurstDown _down;
-    private Burst _burst;
+    private Dictionary<Type, Ability> _abilities;
     private Stamina _stamina;
     private DefenitionCollisions _defenitionCollisions;
     private Health _health;
@@ -28,14 +25,9 @@ public class Player : MonoBehaviour, IControllable
 
     public static UnityEvent<float,float> ChaigedHealth = new UnityEvent<float,float>();
 
-    private void Update()
-    {
-        Debug.Log(_health.CurrentHealth);
-    }
-
     public void Aim(Vector2 mousePosition)
     {
-        Vector2 lookDirection = _camera.ScreenToWorldPoint(mousePosition) - transform.position;
+        Vector2 lookDirection = Camera.main.ScreenToWorldPoint(mousePosition) - transform.position;
         float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
         _torso.rotation = Quaternion.Euler(0, 0, angle);
         Flip(mousePosition);
@@ -43,40 +35,39 @@ public class Player : MonoBehaviour, IControllable
 
     public void Init()
     {
-        _characterData.Chainge.AddListener(Init);
-        _defenitionCollisions = GetComponent<DefenitionCollisions>();
-        _movementDirectionX = GetComponent<MovementDirectionX>();
-        _jump = GetComponent<Jump>();
-        _burst = GetComponent<Burst>();
-        _stamina = GetComponent<Stamina>();
-        _down = GetComponent<BurstDown>();
-        _health = GetComponent<Health>();
-        _weapon = GetComponentInChildren<Weapon>();
         InitAbility();
+        _defenitionCollisions = GetComponent<DefenitionCollisions>();
+        _health = GetComponent<Health>();
+        _stamina = GetComponent<Stamina>();
+        _health.Init(_parameters);
+        _stamina.Init(_parameters);
+        _weapon = GetComponentInChildren<Weapon>();
+        StaminaUI staminaUI = GameObject.FindAnyObjectByType<StaminaUI>();
+        staminaUI.Init(_stamina.MaxCout);
+    }
 
+    public void SetParameters(PlayerParameters parameters)
+    {
+        _parameters = parameters;
     }
 
     private void InitAbility()
     {
         var abilityes = GetComponents<Ability>();
-        Debug.Log(abilityes.Length);
+        _abilities = new Dictionary<Type, Ability>();
 
         foreach (var ability in abilityes)
         {
-            ability.Init(_characterData);
+            ability.Init(_parameters);
+            _abilities.Add(ability.GetType(), ability);
         }
     }
 
-    public void SetDataBase(DataBasePlayer dataBasePlayer)
-    {
-        _characterData = dataBasePlayer;
-    }
-
-    public void Burst(float directionX)
+    public void Burst(Vector2 direction)
     {
         if (_stamina.IsExist)
         {
-            StartCoroutine(_burst.StartBurst(directionX));
+            _abilities[typeof(Burst)].Perform(direction);
             _stamina.Spend();
             Debug.Log("UUUU");
         }
@@ -86,7 +77,7 @@ public class Player : MonoBehaviour, IControllable
     {
         if (_stamina.IsExist)
         {
-            _down.StartDown();
+            _abilities[typeof(BurstDown)].Perform();
             _stamina.Spend();
         }
     }
@@ -94,12 +85,12 @@ public class Player : MonoBehaviour, IControllable
     public void Jump()
     {
         if (_defenitionCollisions.IsGround)
-            _jump.StartJump();
+            _abilities[typeof(Jump)].Perform();
     }
 
-    public void Move(float directoinX)
+    public void Move(Vector2 directoin)
     {
-        _movementDirectionX.Move(directoinX);
+        _abilities[typeof(MovementDirectionX)].Perform(directoin);
     }
 
     public void Shoot()
@@ -110,9 +101,8 @@ public class Player : MonoBehaviour, IControllable
     public void TakeDamage(float damage)
     {
         _health.TakeDamage(damage);
-        Debug.Log(_health.CurrentHealth + " _______________________" + damage); 
-        ChaigedHealth?.Invoke(damage,_characterData.MaxHealth);
-        if(_health.IsDie)
+        ChaigedHealth?.Invoke(damage,_health.MaxHealth);
+        if(_health.CurrentHealth == 0)
         {
             Die();
         }
@@ -125,7 +115,7 @@ public class Player : MonoBehaviour, IControllable
 
     private void Flip(Vector2 mousePosition)
     {
-        Vector2 positionPlayer = _camera.WorldToScreenPoint(transform.position);
+        Vector2 positionPlayer = Camera.main.WorldToScreenPoint(transform.position);
         if(positionPlayer.x > mousePosition.x)
         {
             _torso.localScale = new Vector2(1, -1);
@@ -136,5 +126,15 @@ public class Player : MonoBehaviour, IControllable
             _torso.localScale = new Vector2(1, 1);
             _leg.localScale = new Vector2(1, 1);
         }
+    }
+
+    public Vector2 Position()
+    {
+        return transform.position;
+    }
+
+    public void Teleport(Transform point)
+    {
+        transform.position = point.position;
     }
 }

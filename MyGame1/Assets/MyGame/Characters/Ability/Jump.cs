@@ -4,17 +4,23 @@ using UnityEngine;
 
 public class Jump : AbilityRB
 {
-    private float _forge;
+    [SerializeField] private float _forge;
 
-    public override void Init(DataBase dataPlayer)
+    public override void Init(ICharacterParameters parameters)
     {
-        base.Init(dataPlayer);
-        _forge = float.Parse(dataPlayer.GetParameter(TypeParameter.ForgeJump));
+        base.Init(parameters);
+
+        if (parameters != null)
+        {
+            if (float.TryParse(parameters.GetValue(TypeParameter.ForgeJump), out float result))
+                _forge = result;
+            else
+                throw new System.FormatException("Конвертация не возможна, измените параметер на float");
+        }
     }
 
-    public void StartJump()
+    public override void Perform()
     {
-
         Rigidbody.AddForce(new Vector2(0f, 1 * _forge), ForceMode2D.Impulse);
     }
 }
