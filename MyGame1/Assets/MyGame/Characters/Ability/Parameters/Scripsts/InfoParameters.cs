@@ -40,6 +40,17 @@ public class InfoParameters : ScriptableObject
         return 0;
     }
 
+    public Sprite GetSprite(TypeParameter type)
+    {
+        foreach (var parameter in _parameters)
+        {
+            if (parameter.Type == type)
+                return parameter.Sprite;
+        }
+
+        return null;
+    }
+
     public PlayerParameters CreateStartParameters()
     {
         PlayerParameters parameters = new PlayerParameters();
@@ -47,7 +58,7 @@ public class InfoParameters : ScriptableObject
 
         foreach (var parameter in _parameters)
         {
-            Parameter tempParam = new Parameter(parameter.GetValue(startLvl),startLvl);
+            Parameter tempParam = new Parameter(parameter.GetValue(startLvl),startLvl,parameter.GetMaxLvl());
             parameters.AddParameter(parameter.Type, tempParam);
         }
 

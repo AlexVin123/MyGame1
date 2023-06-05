@@ -8,17 +8,15 @@ public class ButtonUpgrade : MonoBehaviour
 {
     [SerializeField] private Button _button;
     [SerializeField] private TypeParameter _typeParameter;
-    
-    private Image _image;
 
     public UnityAction<TypeParameter> Action;
 
     public Button Button => _button;
 
-    public void Init(TypeParameter typeParameter, Image image)
+    public void Init(TypeParameter typeParameter, Sprite image)
     {
         _typeParameter = typeParameter;
-        _image = image;
+        _button.image.sprite = image;
     }
 
     private void OnEnable()
@@ -33,6 +31,6 @@ public class ButtonUpgrade : MonoBehaviour
 
     private void OnClick()
     {
-        Action.Invoke(_typeParameter);
+        Action?.Invoke(_typeParameter);
     }
 }

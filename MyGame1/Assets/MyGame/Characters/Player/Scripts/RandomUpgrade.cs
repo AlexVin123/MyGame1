@@ -7,9 +7,10 @@ public class RandomUpgrade : MonoBehaviour
 {
     [SerializeField] private int _countRandom = 3;
     [SerializeField] private ButtonUpgrade[] _buttons;
+    [SerializeField] private Spawner _spawner;
     private List<TypeParameter> typeParameters;
     private List<TypeParameter> random = new List<TypeParameter>();
-    private UpgradeSystem _upgradeSystem;
+    private UpgradeParameter _upgradeSystem;
 
     public void init()
     {
@@ -23,7 +24,7 @@ public class RandomUpgrade : MonoBehaviour
         EnableButton();
     }
 
-    public void SetUpdateSystem(UpgradeSystem upgrade)
+    public void SetUpdateSystem(UpgradeParameter upgrade)
     {
         _upgradeSystem = upgrade;
     }
@@ -48,7 +49,7 @@ public class RandomUpgrade : MonoBehaviour
         CreateRandom();
         for (int i = 0; i < _buttons.Length; i++)
         {
-            _buttons[i].Init(random[i], null);
+            _buttons[i].Init(random[i], _upgradeSystem.InfoParameters.GetSprite(random[i]));
         }
     }
 
@@ -60,6 +61,7 @@ public class RandomUpgrade : MonoBehaviour
         {
             button.gameObject.SetActive(true);
             button.Action += _upgradeSystem.Upgrade;
+            button.Button.onClick.AddListener(_spawner.SpawnEnemyInPoints);
             button.Button.onClick.AddListener(DisableButton);
         }
     }

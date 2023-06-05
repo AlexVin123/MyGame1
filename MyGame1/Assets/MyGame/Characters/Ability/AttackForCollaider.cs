@@ -7,7 +7,7 @@ public class AttackForCollaider : Ability
     [SerializeField] private float _speedAttack;
     [SerializeField] private int _damage;
 
-    private AttackCollaider _collaider;
+    [SerializeField]private AttackCollaider _collaider;
     public override void Init(ICharacterParameters parameters = null)
     {
         if (parameters != null)
@@ -18,7 +18,6 @@ public class AttackForCollaider : Ability
                 throw new System.FormatException("Конвертация не возможна, измените параметер на int");
         }
 
-        _collaider = GetComponentInChildren<AttackCollaider>();
         _collaider.Init(_damage, _speedAttack);
         _collaider.gameObject.SetActive(false);
     }

@@ -4,37 +4,29 @@ using UnityEngine;
 
 public class InitGame : MonoBehaviour
 {
-    [SerializeField] private Player player;
+    [SerializeField] private Player _player;
     [SerializeField] private InfoParameters parameters;
-    [SerializeField] private GameObject _buttonsConteiner;
-    [SerializeField] private Enemy enemy;
 
     private PlayerParameters _playerParameters;
-    private UpgradeSystem _upgradeSystem;
-    private ButtonUpgrade[] _buttons;
+    private UpgradeParameter _upgradeSystem;
     private RandomUpgrade _randomUpgrade;
 
     private void Awake()
     {
-        _buttons = _buttonsConteiner.GetComponentsInChildren<ButtonUpgrade>();
         _playerParameters = parameters.CreateStartParameters();
-        player.SetParameters(_playerParameters);
-        player.Init();
-        _upgradeSystem = new UpgradeSystem(parameters, _playerParameters);
-        _upgradeSystem.OnUpgrade += player.Init;
+        _player.SetParameters(_playerParameters);
+        _player.Init();
+        _upgradeSystem = new UpgradeParameter(parameters, _playerParameters);
+        _upgradeSystem.OnUpgrade += _player.ChaigedParameters;
         _randomUpgrade = GetComponent<RandomUpgrade>();
         _randomUpgrade.SetUpdateSystem(_upgradeSystem);
         _randomUpgrade.init();
+        EventSpawner.EndWave += _randomUpgrade.EnableButton;
+        EventSpawner.EndSpawn += SceneTransit;
+    }
 
-
-        if(enemy != null)
-            enemy.Init();
-
-        foreach (var button in _buttons)
-        {
-            button.Action += _upgradeSystem.Upgrade;
-        }
-
-
+    private void SceneTransit()
+    {
+        SceneTransition.SwithToScene(1);
     }
 }

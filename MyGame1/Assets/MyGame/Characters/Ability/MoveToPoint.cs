@@ -14,7 +14,6 @@ public class MoveToPoint : Ability
     public override void Perform(Vector2 value)
     {
         Vector2 direction = value - (Vector2)transform.position;
-        Debug.Log("Погнали");
 
         _moveAbility.Perform(direction.normalized);
     }

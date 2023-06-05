@@ -7,14 +7,12 @@ using TMPro;
 [System.Serializable]
 public class InfoParameter
 {
-    [SerializeField] private string _name;
+    [SerializeField] private Sprite _sprite;
     [SerializeField] private TypeParameter _type;
     [SerializeField] private List<string> _values;
-    [SerializeField][TextArea(5, 10)] private string _description;
 
-    public string Name => _name;
+    public Sprite Sprite => _sprite;
     public TypeParameter Type => _type;
-    public string Description => _description;
 
     public string GetValue(int lvl)
     {

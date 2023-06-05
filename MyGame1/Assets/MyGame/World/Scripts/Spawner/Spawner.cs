@@ -13,8 +13,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private DamageableObject _damageableObject;
     [SerializeField] private Bar _progresBar;
 
-    private event Action<float, float> _onChaingeProgresBar;
-    [SerializeField] public UnityEvent EndWaveEvent;
+
     [SerializeField] private UnityEvent _allKilledEvent;
 
     [SerializeField] private List<Wave> _waves;
@@ -33,99 +32,111 @@ public class Spawner : MonoBehaviour
     private int _countEnemySpawnToIndex;
     private int _CountEnemyToIndex;
 
-    private int _currentIndexInWave;
-    private int _currentEnemyIndex;
+    private int _currentIndexEnemyInWave;
+    private EnemyType _currentEnemyType;
     private int _currentWaveIndex;
+
+    private Dictionary<EnemyType, PoolEnemy> _enemyPoolDictionary;
 
 
     private void OnEnable()
     {
         if (_progresBar != null)
-            _onChaingeProgresBar += _progresBar.ChaingeBar;
+            EventSpawner.ChaingeProgress += _progresBar.ChaingeBar;
 
         _timerBettwenSpawn.OnTimerFinishedEvent += SpawnEnemyInPoints;
+        EventEnemy.Dying += OnDyingEnemy;
 
     }
 
     private void OnDisable()
     {
         if (_progresBar != null)
-            _onChaingeProgresBar -= _progresBar.ChaingeBar;
+            EventSpawner.ChaingeProgress -= _progresBar.ChaingeBar;
 
         _timerBettwenSpawn.OnTimerFinishedEvent -= SpawnEnemyInPoints;
+        EventEnemy.Dying -= OnDyingEnemy;
     }
 
-    public void Start()
+    public void Awake()
     {
         Init();
-        _timerBettwenSpawn.OnTimerFinishedEvent += SpawnEnemyInPoints;
-        StartWave();
     }
 
     public void Init()
     {
+        _enemyPoolDictionary = new Dictionary<EnemyType, PoolEnemy>();
+
+        foreach (var item in _poolEnemies)
+        {
+            _enemyPoolDictionary.Add(item.EnemyIndex, item);
+        }
+
         _timerBettwenSpawn = new Timer(TimerType.OneSecTick);
         _timerBettwenWave = new Timer(TimerType.OneSecTick);
         InitPools();
         _currentWaveIndex = 0;
         _countAllEnemy = CalculateCountEnemy();
         _countEnemyInWave = _waves[_currentWaveIndex].CountEnemy;
-        _currentEnemyIndex = _waves[_currentWaveIndex].GetIndexEnemy(_currentIndexInWave);
-        _CountEnemyToIndex = _waves[_currentWaveIndex].CountEnemyToIndex(_currentIndexInWave);
-    }
+        _currentEnemyType = _waves[_currentWaveIndex].GetEnemyType(_currentIndexEnemyInWave);
+        _CountEnemyToIndex = _waves[_currentWaveIndex].CountEnemyToType(_currentIndexEnemyInWave);
 
-    public void StartWave()
-    {
-        if (_countEnemyInWave != _countEnemySpawnInWave)
-            SpawnEnemyInPoints();
-        else
-        {
-            _currentWaveIndex++;
-            _countKillInWave = 0;
-            _currentIndexInWave = 0;
-            _countEnemySpawnInWave = 0;
-            _countEnemySpawnToIndex = 0;
-            _countEnemyInWave = _waves[_currentWaveIndex].CountEnemy;
-            _CountEnemyToIndex = _waves[_currentWaveIndex].CountEnemyToIndex(_currentIndexInWave);
-            _currentEnemyIndex = _waves[_currentWaveIndex].GetIndexEnemy(_currentIndexInWave);
-        }
 
     }
 
-    private void SpawnEnemyInPoints()
+    public void SpawnEnemyInPoints()
     {
         for (int i = 0; i < _spawnPoints.Count; i++)
         {
+            if(_countEnemyInWave != _countEnemySpawnInWave)
+            {
             SpawnEnemy(i);
 
-            if (_countEnemyInWave == _countEnemySpawnInWave)
-                return;
+                if (_CountEnemyToIndex == _countEnemySpawnToIndex && _currentIndexEnemyInWave != _waves[_currentWaveIndex].CountEnemyType() - 1)
+                {
+                    _currentIndexEnemyInWave++;
+                    _currentEnemyType = _waves[_currentWaveIndex].GetEnemyType(_currentIndexEnemyInWave);
+                    _countEnemySpawnToIndex = 0;
+                    _CountEnemyToIndex = _waves[_currentWaveIndex].CountEnemyToType(_currentIndexEnemyInWave);
+                }
+            }
         }
 
-        _timerBettwenSpawn.Start(_timeBettwenSpawn);
+        if (_countEnemySpawnInWave != _countEnemyInWave)
+        {
+            _timerBettwenSpawn.Start(_timeBettwenSpawn);
+        }
     }
 
     private void SpawnEnemy(int indexSpawnPoint)
     {
-        Enemy enemy = _poolEnemies[_currentEnemyIndex].Spawn(_spawnPoints[indexSpawnPoint].position);
-        enemy.OnDyingEvent += OnDyingEnemy;
+        _enemyPoolDictionary[_currentEnemyType].Spawn(_spawnPoints[indexSpawnPoint].position);
         _countAllSpawnEnemy++;
         _countEnemySpawnInWave++;
         _countEnemySpawnToIndex++;
-
-        if (_CountEnemyToIndex == _countEnemySpawnToIndex)
-        {
-            _currentIndexInWave++;
-            _countEnemySpawnToIndex = 0;
-        }
     }
 
     private void OnDyingEnemy()
     {
         _countKillAll++;
         _countKillInWave++;
-        _onChaingeProgresBar?.Invoke(_countKillAll, _countAllEnemy);
+        EventSpawner.ChaingeProgress?.Invoke(_countKillAll, _countAllEnemy);
 
+        if (_countKillInWave == _countEnemyInWave && _currentWaveIndex != _waves.Count - 1)
+        {
+            EventSpawner.EndWave?.Invoke();
+            _currentWaveIndex++;
+            _countKillInWave = 0;
+            _currentIndexEnemyInWave = 0;
+            _countEnemySpawnInWave = 0;
+            _countEnemySpawnToIndex = 0;
+            _countEnemyInWave = _waves[_currentWaveIndex].CountEnemy;
+            _CountEnemyToIndex = _waves[_currentWaveIndex].CountEnemyToType(_currentIndexEnemyInWave);
+            _currentEnemyType = _waves[_currentWaveIndex].GetEnemyType(_currentIndexEnemyInWave);
+        }
+
+        if(_countAllEnemy == _countKillAll)
+            EventSpawner.EndSpawn?.Invoke();
     }
 
     private void InitPools()

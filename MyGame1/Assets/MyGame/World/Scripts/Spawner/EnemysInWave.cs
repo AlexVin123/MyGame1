@@ -5,9 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class EnemysInWave
 {
-    [SerializeField] private int _index;
+    [SerializeField] private EnemyType _enemyType;
     [SerializeField] private int _count;
 
-    public int Index => _index;
+    public EnemyType EnemyType => _enemyType;
     public int Count => _count;
 }

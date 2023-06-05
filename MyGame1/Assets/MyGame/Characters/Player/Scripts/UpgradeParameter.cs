@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class UpgradeSystem
+public class UpgradeParameter
 {
     private InfoParameters _infoParameters;
     private PlayerParameters _playerParameters;
@@ -13,7 +13,7 @@ public class UpgradeSystem
     public InfoParameters InfoParameters => _infoParameters;
     public PlayerParameters PlayerParameters => _playerParameters;
 
-    public UpgradeSystem(InfoParameters infoParameters, PlayerParameters playerParameters)
+    public UpgradeParameter(InfoParameters infoParameters, PlayerParameters playerParameters)
     {
         _infoParameters = infoParameters;
         _playerParameters = playerParameters;
@@ -29,7 +29,7 @@ public class UpgradeSystem
 
         string value = _infoParameters.GetValue(type, nextLvl);
         Debug.Log(value +" " + nextLvl);
-        Parameter param = new Parameter(value, nextLvl);
+        Parameter param = new Parameter(value, nextLvl,_infoParameters.GetMaxLvl(type));
         _playerParameters.ReplaceParameter(type, param);
         OnUpgrade?.Invoke();
     }

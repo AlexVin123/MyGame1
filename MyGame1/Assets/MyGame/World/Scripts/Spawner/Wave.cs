@@ -5,18 +5,23 @@ using UnityEngine;
 [System.Serializable]
 public class Wave
 {
-    [SerializeField]private List<EnemysInWave> enemiesInWave;
+    [SerializeField]private EnemysInWave[] enemiesInWave;
 
     public int CountEnemy => CalculateCount();
 
-    public int GetIndexEnemy(int index)
+    public EnemyType GetEnemyType(int index)
     {
-        return enemiesInWave[index].Index;
+        return enemiesInWave[index].EnemyType;
     }
 
-    public int CountEnemyToIndex(int index)
+    public int CountEnemyToType(int index)
     {
         return enemiesInWave[index].Count;
+    }
+
+    public int CountEnemyType()
+    {
+        return enemiesInWave.Length;
     }
 
     private int CalculateCount()

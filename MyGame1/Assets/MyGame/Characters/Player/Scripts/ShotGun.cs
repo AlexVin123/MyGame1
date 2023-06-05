@@ -26,7 +26,6 @@ public class ShotGun : Weapon
             Vector3 distance = forward * DistanceShot;
 
             Debug.DrawRay(Shotpoint.position, distance, Color.yellow, 4);
-            Debug.Log(_hits[0].collider); 
 
             if (_hits[0] && _hits[0].collider.TryGetComponent(out Enemy enemy))
                 enemy.TakeDamage(Damage);

@@ -10,26 +10,14 @@ public class Enemy : MonoBehaviour
 {
     private List<ITarget> _targets;
     private Dictionary<TypeAbility, Ability> _abilitiesDictionary;
-    private SpriteRenderer[] _spriteEnemy;
     private TargetSearch _targetSearch;
     private Health _health;
     private StateMachine _machine;
-
-    public event Action OnDyingEvent;
-
-    private void Update()
-    {
-        if (CurrentTarget != null && CurrentTarget.Position().x > transform.position.x)
-            transform.rotation = new Quaternion(0,0,0,0);
-        else
-            transform.rotation = new Quaternion(0,180,0,0);
-    }
-
     public ITarget CurrentTarget
     {
         get
         {
-            if(_targets != null && _targets.Count != 0)
+            if (_targets != null && _targets.Count != 0)
             {
                 return _targets[_targets.Count - 1];
             }
@@ -37,6 +25,16 @@ public class Enemy : MonoBehaviour
             return null;
         }
     }
+
+
+    private void Update()
+    {
+        if (CurrentTarget != null && CurrentTarget.Position().x > transform.position.x)
+            transform.rotation = new Quaternion(0, 0, 0, 0);
+        else if (CurrentTarget != null && CurrentTarget.Position().x < transform.position.x)
+            transform.rotation = new Quaternion(0, 180, 0, 0);
+    }
+
 
     public void PerformAbility(TypeAbility typeAbility)
     {
@@ -59,7 +57,6 @@ public class Enemy : MonoBehaviour
         InitAbility();
         _machine.Init(this);
         _targets = new List<ITarget>();
-        _spriteEnemy = GetComponentsInChildren<SpriteRenderer>();
         _targetSearch = GetComponentInChildren<TargetSearch>();
         _targetSearch.OnTargetEnteredEvent += AddTarget;
         _targetSearch.OnTargetExitedEvent += RemoveTarget;
@@ -73,7 +70,6 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(float damage)
     {
         _health.TakeDamage(damage);
-        Debug.Log("Enemy take damage: " + damage);
 
         if (_health.CurrentHealth == 0)
         {
@@ -100,8 +96,8 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        OnDyingEvent?.Invoke();
-        OnDyingEvent = null;
+        EventEnemy.Dying.Invoke();
+
         gameObject.SetActive(false);
     }
 

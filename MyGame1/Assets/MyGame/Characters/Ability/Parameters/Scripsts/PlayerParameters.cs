@@ -30,6 +30,11 @@ public class PlayerParameters : ICharacterParameters
     {
         return parametrs[typeParameter].Level;
     }
+
+    public int GetMaxLvlParameter(TypeParameter typeParameter)
+    {
+        return parametrs.ContainsKey(typeParameter) ? parametrs[typeParameter].MaxLvl : 0;
+    }
 }
 
 [System.Serializable]
@@ -37,13 +42,17 @@ public class Parameter
 {
     private string _value;
     private int _lvl;
+    private int _maxlvl;
 
     public string Value => _value;
     public int Level => _lvl;
 
-    public Parameter(string value, int lvl)
+    public int MaxLvl => _maxlvl; 
+
+    public Parameter(string value, int lvl, int maxLvl)
     {
         _value = value;
         _lvl = lvl;
+        _maxlvl = maxLvl;
     }
 }

@@ -8,17 +8,39 @@ public class AttackCollaider : MonoBehaviour
     private float _damage;
     private ITarget _target;
     private Timer _timer;
+    private bool _isInit = false;
 
     private void OnEnable()
     {
-            StartAttack();
+        if (_isInit)
+        {
+            _timer.OnTimerFinishedEvent += StartTimer;
+            _timer.OnTimerFinishedEvent += Attack;
+
+            if (_timer.IsPaused)
+            {
+                _timer.UnPause();
+            }
+            else if (_timer.RemainingSecond == 0)
+            {
+                Attack();
+                StartTimer();
+            }
+
+        }
+
     }
 
     private void OnDisable()
     {
-        if(_timer.TryEmpty() == false)
-        _timer.OnTimerFinishedEvent -= StartAttack;
-        _timer.Stop();
+        if (_isInit)
+        {
+            _timer.Pause();
+            _timer.OnTimerFinishedEvent -= StartTimer;
+            _timer.OnTimerFinishedEvent -= Attack;
+
+        }
+
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -34,22 +56,17 @@ public class AttackCollaider : MonoBehaviour
         _damage = damge;
         _speedAttack = speedAttack;
         _timer = new Timer(TimerType.UpdateTick);
+        _isInit = true;
     }
 
-    private void StartAttack()
+    private void StartTimer()
     {
-        Attack();
-        if (_timer.TryEmpty() == false)
-            _timer.OnTimerFinishedEvent -= StartAttack;
-
-        _timer.OnTimerFinishedEvent += StartAttack;
         _timer.Start(_speedAttack);
     }
 
 
     private void Attack()
     {
-        Debug.Log("Attack: " + _target);
 
         if (_target != null)
         {

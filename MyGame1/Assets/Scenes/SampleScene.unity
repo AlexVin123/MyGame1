@@ -314,38 +314,24 @@ MonoBehaviour:
   _spawnPoints:
   - {fileID: 234914944}
   _poolEnemies:
-  - _prefab: {fileID: 4623157967807024553, guid: 3136aa51ab103934da3bab904614922f, type: 3}
+  - _enemyIndex: 0
+    _prefab: {fileID: 4623157967807024553, guid: 3136aa51ab103934da3bab904614922f, type: 3}
     _count: 10
   _timeBettwenSpawn: 3
   _timeBettwenWave: 10
   _damageableObject: {fileID: 697988684}
   _progresBar: {fileID: 1261189993}
-  EndWaveEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 889585677}
-        m_TargetAssemblyTypeName: RandomUpgrade, Assembly-CSharp
-        m_MethodName: EnableButton
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   _allKilledEvent:
     m_PersistentCalls:
       m_Calls: []
   _waves:
   - enemiesInWave:
-    - _index: 0
+    - _enemyType: 0
       _count: 3
-    - _index: 0
+    - _enemyType: 0
       _count: 2
   - enemiesInWave:
-    - _index: 0
+    - _enemyType: 0
       _count: 3
 --- !u!4 &118197649
 Transform:
@@ -2570,6 +2556,7 @@ MonoBehaviour:
   - {fileID: 1027363138}
   - {fileID: 445567862}
   - {fileID: 1035372834}
+  _spawner: {fileID: 118197648}
 --- !u!1001 &934666529
 PrefabInstance:
   m_ObjectHideFlags: 0

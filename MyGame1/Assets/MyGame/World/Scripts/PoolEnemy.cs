@@ -5,8 +5,11 @@ using UnityEngine;
 [System.Serializable]
 public class PoolEnemy
 {
+    [SerializeField] private EnemyType _enemyIndex;
     [SerializeField] private Enemy _prefab;
     [SerializeField] private int _count;
+
+    public EnemyType EnemyIndex => _enemyIndex;
 
     private PoolMono<Enemy> _pool;
 
@@ -25,4 +28,9 @@ public class PoolEnemy
     {
         return _pool.GetFreeElement(position);
     }
+}
+
+public enum EnemyType
+{
+    Enemy1, Enemy2, Enemy3, Enemy4, Enemy5, Enemy6, Enemy7, Enemy8,
 }

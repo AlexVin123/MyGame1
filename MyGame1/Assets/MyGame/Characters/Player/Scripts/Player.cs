@@ -23,8 +23,6 @@ public class Player : MonoBehaviour, IControllable, ITarget
     private Health _health;
     private Weapon _weapon;
 
-    public static UnityEvent<float,float> ChaigedHealth = new UnityEvent<float,float>();
-
     public void Aim(Vector2 mousePosition)
     {
         Vector2 lookDirection = Camera.main.ScreenToWorldPoint(mousePosition) - transform.position;
@@ -39,11 +37,21 @@ public class Player : MonoBehaviour, IControllable, ITarget
         _defenitionCollisions = GetComponent<DefenitionCollisions>();
         _health = GetComponent<Health>();
         _stamina = GetComponent<Stamina>();
-        _health.Init(_parameters);
-        _stamina.Init(_parameters);
+        ChaigedParameters();
         _weapon = GetComponentInChildren<Weapon>();
         StaminaUI staminaUI = GameObject.FindAnyObjectByType<StaminaUI>();
         staminaUI.Init(_stamina.MaxCout);
+    }
+
+    public void ChaigedParameters()
+    {
+        foreach (var item in _abilities.Values)
+        {
+            item.Init(_parameters);
+        }
+
+        _health.Init(_parameters);
+        _stamina.Init(_parameters);
     }
 
     public void SetParameters(PlayerParameters parameters)
@@ -69,7 +77,6 @@ public class Player : MonoBehaviour, IControllable, ITarget
         {
             _abilities[typeof(Burst)].Perform(direction);
             _stamina.Spend();
-            Debug.Log("UUUU");
         }
     }
 
@@ -101,7 +108,7 @@ public class Player : MonoBehaviour, IControllable, ITarget
     public void TakeDamage(float damage)
     {
         _health.TakeDamage(damage);
-        ChaigedHealth?.Invoke(damage,_health.MaxHealth);
+        EventPlayer.ChaingedHealth?.Invoke(damage,_health.MaxHealth);
         if(_health.CurrentHealth == 0)
         {
             Die();
@@ -110,7 +117,7 @@ public class Player : MonoBehaviour, IControllable, ITarget
 
     private void Die()
     {
-
+        EventPlayer.Dying?.Invoke();
     }
 
     private void Flip(Vector2 mousePosition)
