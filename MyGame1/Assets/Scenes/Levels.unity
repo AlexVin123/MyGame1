@@ -468,7 +468,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1065033707}
+      - m_Target: {fileID: 713965794}
         m_TargetAssemblyTypeName: SceneTransition, Assembly-CSharp
         m_MethodName: SwithToScene
         m_Mode: 3
@@ -613,6 +613,7 @@ RectTransform:
   - {fileID: 1077036695}
   - {fileID: 1107919358}
   - {fileID: 632934225}
+  - {fileID: 713965793}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -697,12 +698,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 707683575}
   m_CullTransparentMesh: 1
---- !u!1001 &1065033706
+--- !u!1001 &713965792
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 682259865}
     m_Modifications:
     - target: {fileID: 3681613896028590600, guid: 58a790ec4d188644fa14d96d8c56b778, type: 3}
       propertyPath: m_Pivot.x
@@ -792,12 +793,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: SceneTransition
       objectReference: {fileID: 0}
+    - target: {fileID: 3681613896961802935, guid: 58a790ec4d188644fa14d96d8c56b778, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58a790ec4d188644fa14d96d8c56b778, type: 3}
---- !u!114 &1065033707 stripped
+--- !u!224 &713965793 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3681613896028590600, guid: 58a790ec4d188644fa14d96d8c56b778, type: 3}
+  m_PrefabInstance: {fileID: 713965792}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &713965794 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2532693885014919770, guid: 58a790ec4d188644fa14d96d8c56b778, type: 3}
-  m_PrefabInstance: {fileID: 1065033706}
+  m_PrefabInstance: {fileID: 713965792}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1

@@ -6,7 +6,7 @@ public class MoveToPoint : Ability
 {
     [SerializeField] private Ability _moveAbility;
 
-    public override void Init(ICharacterParameters parameters)
+    public override void Init(ICharacterConfig parameters)
     {
        
     }

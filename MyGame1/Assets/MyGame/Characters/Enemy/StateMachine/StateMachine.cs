@@ -5,33 +5,46 @@ using UnityEngine.Events;
 
 public class StateMachine : MonoBehaviour
 {
-    [SerializeField] private PatternBehavior _patternBehavior;
     [SerializeField] private State _startState;
 
     private Enemy _enemy;
-    private Dictionary<TypeState, State> _dictionaryState;
     private State _currentState;
+
+    public UnityAction<TypeState> ChaigedState;
 
     public void Init(Enemy enemy)
     {
         _enemy = enemy;
-        _patternBehavior.Init();
-        SetStates();
+        InitState();
 
         if (_currentState == null)
             _currentState = _startState;
 
-        _currentState.Enter(_enemy);
+        _currentState.Enter();
+    }
+
+    public void Reset()
+    {
+        if (_currentState != null)
+            _currentState.Exit();
+
+        _currentState = _startState;
+
+        if (_currentState != null)
+            _currentState.Enter();
     }
 
     private void Update()
     {
+        if (_currentState == null)
+            return;
 
-        TypeState state = _patternBehavior.GetNextState(_currentState.TypeState, _enemy);
+        var nextState = _currentState.GetNextState();
 
-        if (state != TypeState.NotState && _currentState.TypeState != state)
+        if (nextState != null)
         {
-            StateTransition(_dictionaryState[state]);
+            StateTransition(nextState);
+            ChaigedState?.Invoke(nextState.TypeState);
         }
     }
 
@@ -39,17 +52,17 @@ public class StateMachine : MonoBehaviour
     {
         _currentState.Exit();
         _currentState = nextState;
-        _currentState.Enter(_enemy);
+        _currentState.Enter();
     }
 
-    private void SetStates()
+    private void InitState()
     {
-        var states = GetComponents<State>();
-        _dictionaryState = new Dictionary<TypeState, State>();
+        State[] states = GetComponents<State>();
 
-        foreach (var state in states)
+        foreach (State state in states)
         {
-            _dictionaryState.Add(state.TypeState, state);
+            state.Init(_enemy);
         }
     }
+
 }

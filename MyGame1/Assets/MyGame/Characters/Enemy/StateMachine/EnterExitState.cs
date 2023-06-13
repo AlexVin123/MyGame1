@@ -9,15 +9,15 @@ public class EnterExitState : State
         
     }
 
-    public override void Enter(Enemy enemy)
+    public override void Enter()
     {
-        base.Enter(enemy);
-        Enemy.PerformAbility(TypeAbility.Abillity1);
+        base.Enter();
+        Enemy.PerformAbility(TypeAbility.Attack);
     }
 
     public override void Exit()
     {
         base.Exit();
-        Enemy.PerformAbility(TypeAbility.Abillity1);
+        Enemy.PerformAbility(TypeAbility.Attack);
     }
 }

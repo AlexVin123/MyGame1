@@ -18,7 +18,6 @@ public class StaminaUI : MonoBehaviour
         {
         _currentCount = count;
         _count = count;
-        Stamina.ChaigeCount.AddListener(OnChaingeCount);
         CreateUnit(_count);
         }
         else if(_count < count)
@@ -31,9 +30,20 @@ public class StaminaUI : MonoBehaviour
         foreach (StaminaUnit unit in _unitList)
         {
             unit.Full();
-            unit.OnDis();
         }
 
+        _current = _unitList[_unitList.Count - 1];
+
+    }
+
+    public void OnAddedStaminaPoint(int count)
+    {
+        Init(count);
+    }
+
+    public void OnLoadStaminaPoint(float value, float maxValue)
+    {
+        _current.Load(value, maxValue);
     }
 
     private void CreateUnit(int count)
@@ -47,14 +57,15 @@ public class StaminaUI : MonoBehaviour
     public void OnChaingeCount(int currentCount)
     {
         _currentCount = currentCount;
-        if (_currentCount < _count)
-            _unitList[_currentCount].OnList();
-
-        if (_currentCount + 1 < _count)
+        for(int i = _count; i != currentCount;)
         {
-            _unitList[_currentCount + 1].OnDis();
-            _unitList[_currentCount + 1].Null();
+            _unitList[i-1].Null();
+            i--;
+        }
 
+        if (currentCount != _count)
+        {
+            _current = _unitList[currentCount];
         }
     }
 }

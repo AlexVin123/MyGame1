@@ -74,6 +74,22 @@ public class PoolMono<T> where T : MonoBehaviour
         throw new System.ArgumentNullException();
     }
 
+    public T GetFreeElement(Vector2 position, Quaternion rotate)
+    {
+        if (HasFreeElement(out T result))
+        {
+            result.transform.position = position;
+            result.transform.localRotation = rotate;
+            result.gameObject.SetActive(true);
+            return result;
+        }
+
+        if (autoExpand)
+            return CreateObject(true);
+
+        throw new System.ArgumentNullException();
+    }
+
     public T[] GetAllElements()
     {
         return _pool.ToArray();

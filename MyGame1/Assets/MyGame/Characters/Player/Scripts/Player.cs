@@ -4,100 +4,137 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Stamina))]
 [RequireComponent(typeof(Burst))]
 [RequireComponent(typeof(BurstDown))]
 [RequireComponent(typeof(Jump))]
 [RequireComponent(typeof(MovementDirectionX))]
 [RequireComponent(typeof(Rigidbody2D))]
-public class Player : MonoBehaviour, IControllable, ITarget
+[RequireComponent(typeof (Explosion))]
+[RequireComponent(typeof(Aim))]
+[RequireComponent(typeof(DefenitionCollisions))]
+public class Player : DamageableObject, IControllable
 {
     [SerializeField] private Transform _torso;
     [SerializeField] private Transform _leg;
-    [SerializeField] private PlayerParameters _parameters;
 
-    private Dictionary<Type, Ability> _abilities;
-    private Stamina _stamina;
-    private DefenitionCollisions _defenitionCollisions;
-    private Health _health;
+    private ICharacterConfig _parameters;
+    private PlayerParameters _parameters2;
+
     private Weapon _weapon;
+
+    private ParticalController _particalController;
+
+    private DefenitionCollisions _defenitionCollisions;
+    private Stamina _stamina;
+    private Burst _burst;
+    private BurstDown _burstDown;
+    private MovementDirectionX _movementDirectionX;
+    private Jump _jump;
+    private Explosion _explosion;
+    private Aim _aim;
+    private Vector2 _luckDirection;
+
+    public UnityAction<float, float> ChaigeLoadStaminaPoint { get { return _stamina.ChaigedLoad; } set { _stamina.ChaigedLoad = value; } }
+    public UnityAction<int> ChaigedStaminaCount { get { return _stamina.ChaigeCount; } set { _stamina.ChaigeCount = value; } }
+    public UnityAction<int> AddedStaminaCount { get { return _stamina.Added; } set { _stamina.Added = value; } }
+
+    public override Vector2 LuckDirection => _luckDirection;
+
+    public int CountStamina => _stamina.MaxCout;
+
+    private void OnDisable()
+    {
+        _burstDown.StartBurstDowm -= OnBurstDownStart;
+        _explosion.StartExploson -= OnBurstDownStop;
+        _explosion.StartExploson -= OnExplousionStart;
+    }
 
     public void Aim(Vector2 mousePosition)
     {
-        Vector2 lookDirection = Camera.main.ScreenToWorldPoint(mousePosition) - transform.position;
-        float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
-        _torso.rotation = Quaternion.Euler(0, 0, angle);
+         _luckDirection = Camera.main.ScreenToWorldPoint(mousePosition) - transform.position;
+        _aim.AimTarget(_luckDirection);
         Flip(mousePosition);
     }
 
-    public void Init()
+    public override void Init(ICharacterConfig config)
     {
-        InitAbility();
-        _defenitionCollisions = GetComponent<DefenitionCollisions>();
-        _health = GetComponent<Health>();
-        _stamina = GetComponent<Stamina>();
-        ChaigedParameters();
-        _weapon = GetComponentInChildren<Weapon>();
-        StaminaUI staminaUI = GameObject.FindAnyObjectByType<StaminaUI>();
-        staminaUI.Init(_stamina.MaxCout);
-    }
-
-    public void ChaigedParameters()
-    {
-        foreach (var item in _abilities.Values)
-        {
-            item.Init(_parameters);
-        }
-
-        _health.Init(_parameters);
+        base.Init(config);
+        SetParameters(config);
+        GetComponents();
+        _movementDirectionX.Init(_parameters);
+        _burst.Init(_parameters);
+        _burstDown.Init(_parameters);
+        _jump.Init(_parameters);
+        _explosion.Init(_parameters);
+        _weapon.Init(_parameters);
+        _aim.Init(_torso);
+        Health.Init(_parameters);
         _stamina.Init(_parameters);
+        _defenitionCollisions.Init();
+        _burstDown.StartBurstDowm += OnBurstDownStart;
+        _explosion.StartExploson += OnBurstDownStop;
+        _explosion.StartExploson += OnExplousionStart;
     }
 
-    public void SetParameters(PlayerParameters parameters)
+    public void OnUpgradeParameter()
+    {
+        Debug.Log("ўбнова");
+        ResetParam();
+    }
+
+    public override void ResetParam()
+    {
+        Health.Init(_parameters);
+        _stamina.Init((_parameters));
+        _weapon.Init(_parameters);
+        _movementDirectionX.Init(_parameters);
+        _burst.Init(_parameters);
+        _burstDown.Init(_parameters);
+        _jump.Init(_parameters);
+        _explosion.Init(_parameters);
+    }
+
+    public void SetParameters(ICharacterConfig parameters)
     {
         _parameters = parameters;
-    }
-
-    private void InitAbility()
-    {
-        var abilityes = GetComponents<Ability>();
-        _abilities = new Dictionary<Type, Ability>();
-
-        foreach (var ability in abilityes)
-        {
-            ability.Init(_parameters);
-            _abilities.Add(ability.GetType(), ability);
-        }
+        _parameters2 = (PlayerParameters)parameters;
     }
 
     public void Burst(Vector2 direction)
     {
-        if (_stamina.IsExist)
+        if (direction.x != 0)
         {
-            _abilities[typeof(Burst)].Perform(direction);
-            _stamina.Spend();
+            if (_stamina.IsExist)
+            {
+                _burst.Perform(direction);
+                _stamina.Spend();
+            }
         }
     }
 
     public void Down()
     {
-        if (_stamina.IsExist)
+        if(_defenitionCollisions.GroundCheck() == false)
         {
-            _abilities[typeof(BurstDown)].Perform();
-            _stamina.Spend();
+            if (_stamina.IsExist)
+            {
+                _burstDown.Perform();
+                _stamina.Spend();
+            }
         }
+
     }
 
     public void Jump()
     {
-        if (_defenitionCollisions.IsGround)
-            _abilities[typeof(Jump)].Perform();
+        if (_defenitionCollisions.GroundCheck())
+            _jump.Perform();
     }
 
     public void Move(Vector2 directoin)
     {
-        _abilities[typeof(MovementDirectionX)].Perform(directoin);
+        _movementDirectionX.Perform(directoin);
     }
 
     public void Shoot()
@@ -105,19 +142,18 @@ public class Player : MonoBehaviour, IControllable, ITarget
         _weapon.Shoot();
     }
 
-    public void TakeDamage(float damage)
+    private void GetComponents()
     {
-        _health.TakeDamage(damage);
-        EventPlayer.ChaingedHealth?.Invoke(damage,_health.MaxHealth);
-        if(_health.CurrentHealth == 0)
-        {
-            Die();
-        }
-    }
-
-    private void Die()
-    {
-        EventPlayer.Dying?.Invoke();
+        _aim = GetComponent<Aim>();
+        _movementDirectionX = GetComponent<MovementDirectionX>();
+        _stamina = GetComponent<Stamina>();
+        _defenitionCollisions = GetComponent<DefenitionCollisions>();
+        _particalController = GetComponent<ParticalController>();
+        _jump = GetComponent<Jump>();
+        _burst = GetComponent<Burst>();
+        _burstDown = GetComponent<BurstDown>();
+        _weapon = GetComponentInChildren<Weapon>();
+        _explosion = GetComponent<Explosion>(); 
     }
 
     private void Flip(Vector2 mousePosition)
@@ -135,13 +171,18 @@ public class Player : MonoBehaviour, IControllable, ITarget
         }
     }
 
-    public Vector2 Position()
+    private void OnBurstDownStart()
     {
-        return transform.position;
+        _particalController.PlayPartical(0);
     }
 
-    public void Teleport(Transform point)
+    private void OnBurstDownStop()
     {
-        transform.position = point.position;
+        _particalController.Stop(0);
+    }
+
+    private void OnExplousionStart()
+    {
+        _particalController.PlayPartical(1);
     }
 }

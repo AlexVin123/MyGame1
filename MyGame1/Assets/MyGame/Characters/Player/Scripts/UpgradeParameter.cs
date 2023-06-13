@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[System.Serializable]
 public class UpgradeParameter
 {
     private InfoParameters _infoParameters;
     private PlayerParameters _playerParameters;
 
-    public UnityAction OnUpgrade;
+    public UnityAction Upgraded;
+    public UnityAction<TypeParameter> MAXLVL; 
 
     public InfoParameters InfoParameters => _infoParameters;
     public PlayerParameters PlayerParameters => _playerParameters;
@@ -21,8 +23,13 @@ public class UpgradeParameter
 
     public void Upgrade(TypeParameter type)
     {
+        Debug.Log("Oбнова2");
+
         int currentLvl = _playerParameters.GetlvlParameter(type);
         int nextLvl = ++currentLvl;
+
+        if (nextLvl == _infoParameters.GetMaxLvl(type))
+            MAXLVL?.Invoke(type);
 
         if (nextLvl > _infoParameters.GetMaxLvl(type))
             return;
@@ -31,6 +38,6 @@ public class UpgradeParameter
         Debug.Log(value +" " + nextLvl);
         Parameter param = new Parameter(value, nextLvl,_infoParameters.GetMaxLvl(type));
         _playerParameters.ReplaceParameter(type, param);
-        OnUpgrade?.Invoke();
+        Upgraded?.Invoke();
     }
 }

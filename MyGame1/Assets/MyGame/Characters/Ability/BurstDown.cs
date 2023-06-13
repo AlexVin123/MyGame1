@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BurstDown : AbilityRB
 {
@@ -11,13 +12,16 @@ public class BurstDown : AbilityRB
     private float _damage;
     private float _forge;
 
-    public override void Init(ICharacterParameters parameters)
+    public UnityAction StartBurstDowm;
+
+    public override void Init(ICharacterConfig parameters)
     {
         base.Init(parameters);
     }
 
     public override void Perform()
     {
+        StartBurstDowm?.Invoke();
         _explosion.Active = true;
         Rigidbody.velocity = Vector2.zero;
         Rigidbody.AddForce(new Vector2(0f, -1 * _forg), ForceMode2D.Impulse);

@@ -30,9 +30,4 @@ public class SceneTransition : MonoBehaviour
         _shouldPlayEndLoadScene = true;
         _instance._asyncOperation.allowSceneActivation = true;
     }
-
-    public void Swith()
-    {
-        SceneTransition.SwithToScene(1);
-    }
 }

@@ -6,15 +6,15 @@ public class Timer
     public event Action OnTimerFinishedEvent;
 
     public bool IsPaused { get; private set; }
-    public TimerType Type { get; private set; }
+    public TypeTimer Type { get; private set; }
     public float RemainingSecond { get; private set; }
 
-    public Timer(TimerType type) 
+    public Timer(TypeTimer type) 
     {
         Type = type;
     }
 
-    public Timer(TimerType type, float seconds)
+    public Timer(TypeTimer type, float seconds)
     {
         Type = type;
         SetTime(seconds);
@@ -78,16 +78,16 @@ public class Timer
     {
         switch(Type)
         {
-            case TimerType.UpdateTick:
+            case TypeTimer.UpdateTick:
                 TimerInvoker.Instance.OnUpdateTimeTickedEvent += OnUpdateTick;
                 break;
-            case TimerType.UpdateTickUnscaled:
+            case TypeTimer.UpdateTickUnscaled:
                 TimerInvoker.Instance.OnUpdateTimeUnscaledTickedEvent += OnUpdateTick;
                 break;
-            case TimerType.OneSecTick:
+            case TypeTimer.OneSecTick:
                 TimerInvoker.Instance.OnOneSecondTimeTickedEvent += OnOneSecTick;
                 break;
-            case TimerType.OneSecTickUnscaled:
+            case TypeTimer.OneSecTickUnscaled:
                 TimerInvoker.Instance.OnOnSecondUnscaledTickedEvent += OnOneSecTick;
                 break;
             default:
@@ -99,16 +99,16 @@ public class Timer
     {
         switch (Type)
         {
-            case TimerType.UpdateTick:
+            case TypeTimer.UpdateTick:
                 TimerInvoker.Instance.OnUpdateTimeTickedEvent -= OnUpdateTick;
                 break;
-            case TimerType.UpdateTickUnscaled:
+            case TypeTimer.UpdateTickUnscaled:
                 TimerInvoker.Instance.OnUpdateTimeUnscaledTickedEvent -= OnUpdateTick;
                 break;
-            case TimerType.OneSecTick:
+            case TypeTimer.OneSecTick:
                 TimerInvoker.Instance.OnOneSecondTimeTickedEvent -= OnOneSecTick;
                 break;
-            case TimerType.OneSecTickUnscaled:
+            case TypeTimer.OneSecTickUnscaled:
                 TimerInvoker.Instance.OnOnSecondUnscaledTickedEvent -= OnOneSecTick;
                 break;
             default:

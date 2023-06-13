@@ -43,19 +43,37 @@ public class AttackCollaider : MonoBehaviour
 
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.TryGetComponent(out ITarget target))
+        if(collision.transform.TryGetComponent(out ITarget target))
+        {
             _target = target;
+        }
         else
             _target = null;
     }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.transform.TryGetComponent(out ITarget target))
+        {
+            _target = null;
+        }
+    }
+
+    //private void OnTriggerStay2D(Collider2D collision)
+    //{
+    //    if (collision.transform.TryGetComponent(out ITarget target))
+    //        _target = target;
+    //    else
+    //        _target = null;
+    //}
 
     public void Init(float damge, float speedAttack)
     {
         _damage = damge;
         _speedAttack = speedAttack;
-        _timer = new Timer(TimerType.UpdateTick);
+        _timer = new Timer(TypeTimer.UpdateTick);
         _isInit = true;
     }
 

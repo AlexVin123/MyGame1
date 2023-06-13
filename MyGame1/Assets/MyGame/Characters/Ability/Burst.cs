@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Burst : AbilityRB
 {
@@ -7,8 +8,10 @@ public class Burst : AbilityRB
     [SerializeField] private float _distanceBurst;
     private bool _isBurst = false;
     private Vector2 _targetPoint;
+    private float _gravityScale;
+    private Coroutine _coroutine;
 
-    public override void Init(ICharacterParameters parameters)
+    public override void Init(ICharacterConfig parameters)
     {
         base.Init(parameters);
 
@@ -20,22 +23,32 @@ public class Burst : AbilityRB
             else
                 throw new System.ArgumentException("Конвертация невозможна, поменяйте данные на float");
         }
+
+        _gravityScale = Rigidbody.gravityScale;
     }
 
     public override void Perform(Vector2 direction)
     {
-        StartCoroutine(StartBurst(direction));
+        _coroutine = StartCoroutine(StartBurst(direction));
     }
 
     public IEnumerator StartBurst(Vector2 direction)
     {
-        float gravityScale = 0;
+        int directonX = 0;
+
+        Debug.Log(direction.x);
+
+        if (direction.x > 0)
+            directonX = 1;
+        else if (direction.x < 0)
+            directonX = -1;
+
+        Debug.Log(directonX);
 
         if (_isBurst == false)
         {
             Rigidbody.velocity = Vector2.zero;
-            _targetPoint = new Vector2(Rigidbody.position.x + _distanceBurst * direction.x, Rigidbody.position.y);
-            gravityScale = Rigidbody.gravityScale;
+            _targetPoint = new Vector2(Rigidbody.position.x + _distanceBurst * directonX, Rigidbody.position.y);
             Rigidbody.gravityScale = 0;
             _isBurst = true;
         }
@@ -45,7 +58,19 @@ public class Burst : AbilityRB
             Rigidbody.position = Vector2.MoveTowards(Rigidbody.position, _targetPoint, _forgeBurst * Time.deltaTime);
             yield return null;
         }
-        Rigidbody.gravityScale = gravityScale;
+
+        Rigidbody.gravityScale = _gravityScale;
         _isBurst = false;
+
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        //Debug.Log("Колизия!!");
+
+        //if (_coroutine != null)
+        //    StopCoroutine(_coroutine);
+
+        //Rigidbody.gravityScale = _gravityScale;
     }
 }

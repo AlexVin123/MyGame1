@@ -9,32 +9,27 @@ public class DefenitionCollisions : MonoBehaviour
 
     private Rigidbody2D _rigidbody2D;
 
-    public bool IsGround { get; private set; }
-
-    private void Awake()
+    public void Init()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
-    private void FixedUpdate()
-    {
-        GroundCheck();
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        GroundCheck();
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        GroundCheck();
-    }
-
-    private void GroundCheck()
+    public bool GroundCheck()
     {
         var hit = new RaycastHit2D[1];
         var countCollision = _rigidbody2D.Cast(-transform.up,_filter, hit, _distansCheckDown);
-        IsGround = countCollision > 0;
+        //if (countCollision > 0)
+        return hit[0];
+
+
+    }
+
+    public bool ReyCastDown(float distanse)
+    {
+        var hit = new RaycastHit2D[1];
+        Physics2D.Raycast(transform.position, -Vector2.up, _filter, hit, distanse);
+  
+
+        return hit[0];
     }
 }

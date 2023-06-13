@@ -8,7 +8,7 @@ public class AttackForCollaider : Ability
     [SerializeField] private int _damage;
 
     [SerializeField]private AttackCollaider _collaider;
-    public override void Init(ICharacterParameters parameters = null)
+    public override void Init(ICharacterConfig parameters = null)
     {
         if (parameters != null)
         {

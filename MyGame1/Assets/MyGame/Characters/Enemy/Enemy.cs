@@ -6,13 +6,19 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 
-public class Enemy : MonoBehaviour
+public class Enemy : DamageableObject
 {
+    [SerializeField] private bool _flip;
+
     private List<ITarget> _targets;
     private Dictionary<TypeAbility, Ability> _abilitiesDictionary;
     private TargetSearch _targetSearch;
-    private Health _health;
     private StateMachine _machine;
+    private AnimatorController _controller;
+    private Rigidbody2D _rigidbody;
+
+    public Rigidbody2D Rigidbody => _rigidbody;
+
     public ITarget CurrentTarget
     {
         get
@@ -27,14 +33,33 @@ public class Enemy : MonoBehaviour
     }
 
 
+
+
     private void Update()
     {
-        if (CurrentTarget != null && CurrentTarget.Position().x > transform.position.x)
-            transform.rotation = new Quaternion(0, 0, 0, 0);
-        else if (CurrentTarget != null && CurrentTarget.Position().x < transform.position.x)
-            transform.rotation = new Quaternion(0, 180, 0, 0);
+        //Debug.Log(CurrentTarget);
+
+        if (_flip)
+        {
+            if (CurrentTarget != null && CurrentTarget.Position.x > transform.position.x)
+                transform.rotation = new Quaternion(0, 0, 0, 0);
+            else if (CurrentTarget != null && CurrentTarget.Position.x < transform.position.x)
+                transform.rotation = new Quaternion(0, 180, 0, 0);
+        }
+
+
     }
 
+    public override void ResetParam()
+    {
+        if (_controller != null)
+            _machine.ChaigedState = _controller.OnChaigedState;
+
+        _machine.Reset();
+        Health.Init();
+        _targetSearch.OnTargetEnteredEvent += AddTarget;
+        _targetSearch.OnTargetExitedEvent += RemoveTarget;
+    }
 
     public void PerformAbility(TypeAbility typeAbility)
     {
@@ -51,35 +76,28 @@ public class Enemy : MonoBehaviour
         _abilitiesDictionary[typeAbility].Perform(direction);
     }
 
-    public virtual void Init(ITarget target = null)
+    public override void Init(ICharacterConfig config = null)
     {
+        base.Init(config);
         _machine = GetComponent<StateMachine>();
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _targetSearch = GetComponentInChildren<TargetSearch>();
+        _controller = GetComponent<AnimatorController>();
         InitAbility();
         _machine.Init(this);
         _targets = new List<ITarget>();
-        _targetSearch = GetComponentInChildren<TargetSearch>();
-        _targetSearch.OnTargetEnteredEvent += AddTarget;
-        _targetSearch.OnTargetExitedEvent += RemoveTarget;
-        _health = GetComponent<Health>();
-        _health.Init(null);
 
-        if (target != null)
-            _targets.Add(target);
-    }
-
-    public void TakeDamage(float damage)
-    {
-        _health.TakeDamage(damage);
-
-        if (_health.CurrentHealth == 0)
+        if (_controller != null)
         {
-            Die();
+            _controller.Init();
+            _machine.ChaigedState = _controller.OnChaigedState;
         }
     }
 
-    private void AddTarget(ITarget target)
+    public void AddTarget(ITarget target)
     {
-        _targets.Add(target);
+        if (target != null)
+            _targets.Add(target);
     }
 
     private void RemoveTarget(ITarget target)
@@ -94,11 +112,15 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void Die()
+    protected override void Die()
     {
-        EventEnemy.Dying.Invoke();
+        if (_controller != null)
+            _machine.ChaigedState -= _controller.OnChaigedState;
 
-        gameObject.SetActive(false);
+        _targetSearch.OnTargetEnteredEvent += AddTarget;
+        _targetSearch.OnTargetExitedEvent += RemoveTarget;
+
+        base.Die();
     }
 
     private void InitAbility()
@@ -109,7 +131,8 @@ public class Enemy : MonoBehaviour
         foreach (var ability in abilities)
         {
             ability.Init(null);
-            _abilitiesDictionary.Add(ability.TypeAbility, ability);
+            if (ability.TypeAbility != TypeAbility.None)
+                _abilitiesDictionary.Add(ability.TypeAbility, ability);
         }
     }
 }

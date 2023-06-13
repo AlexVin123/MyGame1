@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Stamina:MonoBehaviour
+public class Stamina : MonoBehaviour
 {
-    private int _maxCout;
-    private float _delay;
+    [SerializeField] private int _maxCout;
+    [SerializeField] private float _delay;
     private int _currentCount;
     private float _timer;
 
-    public static UnityEvent<float, float> Load = new UnityEvent<float, float>();
-    public static UnityEvent<int> ChaigeCount = new UnityEvent<int>(); 
+    public UnityAction<float, float> ChaigedLoad;
+    public UnityAction<int> ChaigeCount;
+    public UnityAction<int> Added;
 
     public bool IsExist { get { return _currentCount > 0; } }
 
@@ -22,7 +23,7 @@ public class Stamina:MonoBehaviour
         if (_currentCount < _maxCout)
         {
             _timer += Time.deltaTime;
-            Load?.Invoke(_delay, _timer);
+            ChaigedLoad?.Invoke(_delay, _timer);
 
             if (_timer >= _delay)
             {
@@ -44,7 +45,7 @@ public class Stamina:MonoBehaviour
         ChaigeCount?.Invoke(_currentCount);
     }
 
-    public void Init(ICharacterParameters parameters)
+    public void Init(ICharacterConfig parameters)
     {
         if (parameters != null)
         {
@@ -54,9 +55,14 @@ public class Stamina:MonoBehaviour
                 throw new System.FormatException("Конвертация не возможна, измените параметер на float");
 
             if (int.TryParse(parameters.GetValue(TypeParameter.CountStamina), out int result2))
+            {
                 _maxCout = result2;
+                Added?.Invoke(_maxCout);
+            }
             else
+            {
                 throw new System.FormatException("Конвертация не возможна, измените параметер на int");
+            }
         }
 
         _currentCount = _maxCout;

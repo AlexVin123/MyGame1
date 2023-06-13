@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerParameters : ICharacterParameters
+[System.Serializable]
+public class PlayerParameters : ICharacterConfig
 {
     private Dictionary<TypeParameter, Parameter> parametrs;
+    private List<Parameter> par;
 
     public PlayerParameters()
     {
         parametrs = new Dictionary<TypeParameter, Parameter>();
+        par = new List<Parameter>();
     }
 
     public string GetValue(TypeParameter typeParameter)
@@ -19,11 +22,18 @@ public class PlayerParameters : ICharacterParameters
     public void AddParameter(TypeParameter typeParameter, Parameter parameter)
     {
         parametrs.Add(typeParameter, parameter);
+        par.Add(parameter);
     }
 
     public void ReplaceParameter(TypeParameter typeParameter, Parameter newParameter)
     {
         parametrs[typeParameter] = newParameter;
+
+        foreach (Parameter parameter in parametrs.Values)
+        {
+            par.Clear();
+            par.Add(parameter);
+        }
     }
 
     public int GetlvlParameter(TypeParameter typeParameter)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "CreateEnemyParameters")]
-public class EnemyParameters : ScriptableObject, ICharacterParameters
+public class EnemyParameters : ScriptableObject, ICharacterConfig
 {
     [SerializeField] private List<EnemyParameter> _enemyParameters;
 

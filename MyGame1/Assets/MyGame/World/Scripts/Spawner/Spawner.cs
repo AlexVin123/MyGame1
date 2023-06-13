@@ -9,17 +9,10 @@ public class Spawner : MonoBehaviour
     [SerializeField] private List<Transform> _spawnPoints;
     [SerializeField] private List<PoolEnemy> _poolEnemies;
     [SerializeField] private float _timeBettwenSpawn = 3;
-    [SerializeField] private float _timeBettwenWave = 10;
     [SerializeField] private DamageableObject _damageableObject;
-    [SerializeField] private Bar _progresBar;
-
-
-    [SerializeField] private UnityEvent _allKilledEvent;
-
     [SerializeField] private List<Wave> _waves;
 
     private Timer _timerBettwenSpawn;
-    private Timer _timerBettwenWave;
 
     private int _countAllSpawnEnemy;
     private int _countAllEnemy;
@@ -38,29 +31,25 @@ public class Spawner : MonoBehaviour
 
     private Dictionary<EnemyType, PoolEnemy> _enemyPoolDictionary;
 
+    public UnityAction<int> ChaigedWave;
+    public UnityAction<float,float> ChaigedWaveProgress;
+    public UnityAction EndWave;
+    public UnityAction EndSpawn;
 
+    public int CountWave => _waves.Count;
     private void OnEnable()
     {
-        if (_progresBar != null)
-            EventSpawner.ChaingeProgress += _progresBar.ChaingeBar;
 
-        _timerBettwenSpawn.OnTimerFinishedEvent += SpawnEnemyInPoints;
-        EventEnemy.Dying += OnDyingEnemy;
+
 
     }
 
     private void OnDisable()
     {
-        if (_progresBar != null)
-            EventSpawner.ChaingeProgress -= _progresBar.ChaingeBar;
+        //_timerBettwenSpawn.Stop();
 
         _timerBettwenSpawn.OnTimerFinishedEvent -= SpawnEnemyInPoints;
-        EventEnemy.Dying -= OnDyingEnemy;
-    }
-
-    public void Awake()
-    {
-        Init();
+        Unsubscribe();
     }
 
     public void Init()
@@ -72,16 +61,45 @@ public class Spawner : MonoBehaviour
             _enemyPoolDictionary.Add(item.EnemyIndex, item);
         }
 
-        _timerBettwenSpawn = new Timer(TimerType.OneSecTick);
-        _timerBettwenWave = new Timer(TimerType.OneSecTick);
+        _timerBettwenSpawn = new Timer(TypeTimer.OneSecTick);
         InitPools();
         _currentWaveIndex = 0;
+        ChaigedWave?.Invoke(_currentWaveIndex);
         _countAllEnemy = CalculateCountEnemy();
         _countEnemyInWave = _waves[_currentWaveIndex].CountEnemy;
         _currentEnemyType = _waves[_currentWaveIndex].GetEnemyType(_currentIndexEnemyInWave);
         _CountEnemyToIndex = _waves[_currentWaveIndex].CountEnemyToType(_currentIndexEnemyInWave);
 
+        _timerBettwenSpawn.OnTimerFinishedEvent += SpawnEnemyInPoints;
+        Subscribe();
 
+
+    }
+
+    private void Subscribe()
+    {
+        foreach (var item in _poolEnemies)
+        {
+            Enemy[] enemies = item.GetAllEnemy();
+
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.Dying += OnDyingEnemy;
+            }
+        }
+    }
+
+    private void Unsubscribe()
+    {
+        foreach (var item in _poolEnemies)
+        {
+            Enemy[] enemies = item.GetAllEnemy();
+
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.Dying -= OnDyingEnemy;
+            }
+        }
     }
 
     public void SpawnEnemyInPoints()
@@ -120,23 +138,25 @@ public class Spawner : MonoBehaviour
     {
         _countKillAll++;
         _countKillInWave++;
-        EventSpawner.ChaingeProgress?.Invoke(_countKillAll, _countAllEnemy);
+        ChaigedWaveProgress?.Invoke(_countKillInWave, _countEnemyInWave);
 
         if (_countKillInWave == _countEnemyInWave && _currentWaveIndex != _waves.Count - 1)
         {
-            EventSpawner.EndWave?.Invoke();
+             EndWave?.Invoke();
             _currentWaveIndex++;
+            ChaigedWave?.Invoke(_currentWaveIndex);
             _countKillInWave = 0;
             _currentIndexEnemyInWave = 0;
             _countEnemySpawnInWave = 0;
             _countEnemySpawnToIndex = 0;
             _countEnemyInWave = _waves[_currentWaveIndex].CountEnemy;
+            ChaigedWaveProgress?.Invoke(_countKillInWave, _countEnemyInWave);
             _CountEnemyToIndex = _waves[_currentWaveIndex].CountEnemyToType(_currentIndexEnemyInWave);
             _currentEnemyType = _waves[_currentWaveIndex].GetEnemyType(_currentIndexEnemyInWave);
         }
 
         if(_countAllEnemy == _countKillAll)
-            EventSpawner.EndSpawn?.Invoke();
+            EndSpawn?.Invoke();
     }
 
     private void InitPools()

@@ -6,7 +6,7 @@ public class Jump : AbilityRB
 {
     [SerializeField] private float _forge;
 
-    public override void Init(ICharacterParameters parameters)
+    public override void Init(ICharacterConfig parameters)
     {
         base.Init(parameters);
 

@@ -4,18 +4,15 @@ using UnityEngine;
 
 public class UpdateStatePositionTarget : State
 {
+    //public override void Enter()
+    //{
+    //    base.Enter();
+    //    Enemy.PerformAbility(Ability, Enemy.CurrentTarget.Position());
+    //}
+
     private void Update()
     {
-        Enemy.PerformAbility(Ability, Enemy.CurrentTarget.Position());
-    }
-
-    public override void Enter(Enemy enemy)
-    {
-        base.Enter(enemy);
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
+        if (Enemy.CurrentTarget != null)
+            Enemy.PerformAbility(Ability, Enemy.CurrentTarget.Position);
     }
 }

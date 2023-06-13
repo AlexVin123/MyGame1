@@ -13,6 +13,11 @@ public class PoolEnemy
 
     private PoolMono<Enemy> _pool;
 
+    public Enemy[] GetAllEnemy()
+    {
+        return _pool.GetAllElements();
+    }
+
     public void Init(Transform conteiner, ITarget target = null)
     {
         _pool = new PoolMono<Enemy>(_prefab, _count, conteiner);
@@ -20,17 +25,20 @@ public class PoolEnemy
 
         foreach (Enemy enemy in allEnemy)
         {
-            enemy.Init(target);
+            enemy.Init(null);
+            enemy.AddTarget(target);
         }
     }
 
     public Enemy Spawn(Vector2 position)
     {
-        return _pool.GetFreeElement(position);
+        Enemy enemy = _pool.GetFreeElement(position);
+        enemy.ResetParam();
+        return enemy;
     }
 }
 
 public enum EnemyType
 {
-    Enemy1, Enemy2, Enemy3, Enemy4, Enemy5, Enemy6, Enemy7, Enemy8,
+    EnemyDog, FlyEnemy, TaranEnemy, BossEnemy, Enemy5, Enemy6, Enemy7, Enemy8,
 }

@@ -13,60 +13,75 @@ MonoBehaviour:
   m_Name: InfoParameterPlayer
   m_EditorClassIdentifier: 
   _parameters:
-  - _name: "\u0421\u043A\u043E\u0440\u043E\u0441\u0442\u044C \u043F\u0435\u0440\u0435\u0434\u0432\u0438\u0436\u0435\u043D\u0438\u044F"
+  - _sprite: {fileID: 7294271934939847244, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
     _type: 0
     _values:
     - 30
     - 40
     - 50
-    _description: "\u0423\u043B\u0443\u0447\u0448\u0430\u0435\u0442 \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u044C
-      \u043F\u0435\u0440\u0435\u0434\u0432\u0438\u0436\u0435\u043D\u0438\u044F"
-  - _name: "\u0414\u0438\u0441\u0442\u0430\u043D\u0446\u0438\u044F \u0440\u044B\u0432\u043A\u0430"
+  - _sprite: {fileID: 767432101013934202, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
     _type: 1
     _values:
     - 10
     - 15
     - 20
-    _description: "\u0423\u043B\u0443\u0447\u0448\u0430\u0435\u0442 \u0434\u0438\u0441\u0442\u0430\u043D\u0446\u0438\u044E
-      \u0440\u044B\u0432\u043A\u0430"
-  - _name: "\u0421\u0438\u043B\u0430 \u043F\u0440\u044B\u0436\u043A\u0430"
+  - _sprite: {fileID: -6531281304339880533, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
     _type: 2
     _values:
     - 80
     - 120
     - 160
-    _description: "\u0423\u043B\u0443\u0447\u0448\u0430\u0435\u0442 \u0441\u0438\u043B\u0443
-      \u043F\u0440\u044B\u0436\u043A\u0430"
-  - _name: "\u041F\u0435\u0440\u0435\u0437\u0430\u0440\u044F\u0434\u043A\u0430 \u0441\u0442\u0430\u043C\u0438\u043D\u044B"
+  - _sprite: {fileID: 4119900466527680643, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
     _type: 3
     _values:
     - 3
     - 2
     - 1
-    _description: "\u0423\u043B\u0443\u0447\u0448\u0430\u0435\u0442 \u0432\u0440\u0435\u043C\u044F
-      \u043D\u0430 \u0432\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F
-      1 \u0435\u0434\u0435\u043D\u0438\u0446\u0438 \u0441\u0442\u0430\u043C\u0438\u043D\u044B"
-  - _name: "\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0441\u0442\u0430\u043C\u0438\u043D\u044B"
+  - _sprite: {fileID: -3416733962687053290, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
     _type: 4
     _values:
     - 3
     - 5
     - 7
-    _description: "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442
-      \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0441\u0442\u0430\u043C\u0438\u043D\u044B"
-  - _name: "\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0436\u0438\u0437\u043D\u0435\u0439"
+  - _sprite: {fileID: -1999333682890996518, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
     _type: 5
     _values:
     - 80
     - 110
     - 160
-    _description: "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442
-      \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0436\u0438\u0437\u043D\u0435\u0439"
-  - _name: "\u0423\u0440\u043E\u043D"
+  - _sprite: {fileID: 5809094394127269038, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
     _type: 6
     _values:
-    - 25
-    - 40
-    - 60
-    _description: "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442
-      \u0443\u0440\u043E\u043D \u0434\u0440\u043E\u0431\u043E\u0432\u0438\u043A\u0430"
+    - 3
+    - 7
+    - 10
+  - _sprite: {fileID: 202158678554010356, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
+    _type: 7
+    _values:
+    - 5
+    - 10
+    - 15
+  - _sprite: {fileID: 4897006497302704396, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
+    _type: 8
+    _values:
+    - 20
+    - 30
+    - 45
+  - _sprite: {fileID: 458464499133948713, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
+    _type: 9
+    _values:
+    - 20
+    - 30
+    - 45
+  - _sprite: {fileID: -6368034230913231208, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
+    _type: 10
+    _values:
+    - 10
+    - 20
+    - 30
+  - _sprite: {fileID: 2262267811028117588, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
+    _type: 11
+    _values:
+    - 1
+    - 0,6
+    - 0,4

@@ -22,20 +22,8 @@ public class StaminaUnit : MonoBehaviour
         _image.fillAmount = 1;
     }
 
-    public void OnList()
-    {
-        Stamina.Load.AddListener(Load);
-    }
-
-    public void OnDis()
-    {
-        Stamina.Load.RemoveListener(Load);
-    }
-
     public void Load(float maxValue, float currentValue)
     {
         _image.fillAmount = currentValue / maxValue;
-        if (_image.fillAmount == 1)
-            OnDis();
     }
 }

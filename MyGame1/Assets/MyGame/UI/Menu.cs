@@ -1,31 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
-    public void OpenClouse()
+    public UnityAction PanelCloused;
+    public UnityAction PanelOpen;
+    public virtual void OpenClouse(InputAction.CallbackContext obj)
     {
-        if(this.gameObject.active)
+        if(gameObject.activeInHierarchy)
         {
-            this.gameObject.SetActive(false);
+            Clouse();
         }
         else
         {
-            this.gameObject.SetActive(true);
+            Open();
         }
     }
 
-    private void OpenPanel()
+    public virtual void Open()
     {
-        this.gameObject.SetActive(true);
+        PanelOpen?.Invoke();
+        gameObject.SetActive(true);
+        Time.timeScale = 0;
     }
 
-    private void ClousePanel()
+    public virtual void Clouse()
     {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
+        PanelCloused?.Invoke();
+        Time.timeScale = 1;
     }
 
+    public void ReturnInMainMeny()
+    {
+        Time.timeScale = 1;
+        SceneTransition.SwithToScene(0);
+    }
 
+    public void Exit()
+    {
+        Application.Quit();
+    }
 }

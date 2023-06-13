@@ -82,9 +82,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Update"",
+                    ""name"": ""OpenMenu"",
                     ""type"": ""Button"",
-                    ""id"": ""e4e350b7-78eb-44bd-bd8b-133aea7ee812"",
+                    ""id"": ""1ed3fff1-0b11-4c8c-8ce9-554c63bf87a6"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -182,40 +182,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""f797d98d-5d00-4ac5-b556-ea7e9e19ad7a"",
-                    ""path"": ""<Keyboard>/j"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Update"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""Test"",
-            ""id"": ""70e631a7-57e1-42a0-ac53-f8310d58509d"",
-            ""actions"": [
-                {
-                    ""name"": ""PosMouse"",
-                    ""type"": ""Value"",
-                    ""id"": ""cf5ea1d9-2203-4079-8fa7-b5c22e3de518"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""940e8d97-c1af-420e-9e70-422c5670db7a"",
-                    ""path"": ""<Mouse>/position"",
+                    ""id"": ""4311aa25-7ea4-4921-ae5f-5a6d6444a353"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""PosMouse"",
+                    ""action"": ""OpenMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -249,10 +221,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_PlayerController_Down = m_PlayerController.FindAction("Down", throwIfNotFound: true);
         m_PlayerController_PositionMouse = m_PlayerController.FindAction("PositionMouse", throwIfNotFound: true);
         m_PlayerController_Shoot = m_PlayerController.FindAction("Shoot", throwIfNotFound: true);
-        m_PlayerController_Update = m_PlayerController.FindAction("Update", throwIfNotFound: true);
-        // Test
-        m_Test = asset.FindActionMap("Test", throwIfNotFound: true);
-        m_Test_PosMouse = m_Test.FindAction("PosMouse", throwIfNotFound: true);
+        m_PlayerController_OpenMenu = m_PlayerController.FindAction("OpenMenu", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -320,7 +289,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerController_Down;
     private readonly InputAction m_PlayerController_PositionMouse;
     private readonly InputAction m_PlayerController_Shoot;
-    private readonly InputAction m_PlayerController_Update;
+    private readonly InputAction m_PlayerController_OpenMenu;
     public struct PlayerControllerActions
     {
         private @PlayerInput m_Wrapper;
@@ -331,7 +300,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Down => m_Wrapper.m_PlayerController_Down;
         public InputAction @PositionMouse => m_Wrapper.m_PlayerController_PositionMouse;
         public InputAction @Shoot => m_Wrapper.m_PlayerController_Shoot;
-        public InputAction @Update => m_Wrapper.m_PlayerController_Update;
+        public InputAction @OpenMenu => m_Wrapper.m_PlayerController_OpenMenu;
         public InputActionMap Get() { return m_Wrapper.m_PlayerController; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -359,9 +328,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Shoot.started += instance.OnShoot;
             @Shoot.performed += instance.OnShoot;
             @Shoot.canceled += instance.OnShoot;
-            @Update.started += instance.OnUpdate;
-            @Update.performed += instance.OnUpdate;
-            @Update.canceled += instance.OnUpdate;
+            @OpenMenu.started += instance.OnOpenMenu;
+            @OpenMenu.performed += instance.OnOpenMenu;
+            @OpenMenu.canceled += instance.OnOpenMenu;
         }
 
         private void UnregisterCallbacks(IPlayerControllerActions instance)
@@ -384,9 +353,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Shoot.started -= instance.OnShoot;
             @Shoot.performed -= instance.OnShoot;
             @Shoot.canceled -= instance.OnShoot;
-            @Update.started -= instance.OnUpdate;
-            @Update.performed -= instance.OnUpdate;
-            @Update.canceled -= instance.OnUpdate;
+            @OpenMenu.started -= instance.OnOpenMenu;
+            @OpenMenu.performed -= instance.OnOpenMenu;
+            @OpenMenu.canceled -= instance.OnOpenMenu;
         }
 
         public void RemoveCallbacks(IPlayerControllerActions instance)
@@ -404,52 +373,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         }
     }
     public PlayerControllerActions @PlayerController => new PlayerControllerActions(this);
-
-    // Test
-    private readonly InputActionMap m_Test;
-    private List<ITestActions> m_TestActionsCallbackInterfaces = new List<ITestActions>();
-    private readonly InputAction m_Test_PosMouse;
-    public struct TestActions
-    {
-        private @PlayerInput m_Wrapper;
-        public TestActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @PosMouse => m_Wrapper.m_Test_PosMouse;
-        public InputActionMap Get() { return m_Wrapper.m_Test; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(TestActions set) { return set.Get(); }
-        public void AddCallbacks(ITestActions instance)
-        {
-            if (instance == null || m_Wrapper.m_TestActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_TestActionsCallbackInterfaces.Add(instance);
-            @PosMouse.started += instance.OnPosMouse;
-            @PosMouse.performed += instance.OnPosMouse;
-            @PosMouse.canceled += instance.OnPosMouse;
-        }
-
-        private void UnregisterCallbacks(ITestActions instance)
-        {
-            @PosMouse.started -= instance.OnPosMouse;
-            @PosMouse.performed -= instance.OnPosMouse;
-            @PosMouse.canceled -= instance.OnPosMouse;
-        }
-
-        public void RemoveCallbacks(ITestActions instance)
-        {
-            if (m_Wrapper.m_TestActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(ITestActions instance)
-        {
-            foreach (var item in m_Wrapper.m_TestActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_TestActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public TestActions @Test => new TestActions(this);
     private int m_KeyboardandMouseSchemeIndex = -1;
     public InputControlScheme KeyboardandMouseScheme
     {
@@ -467,10 +390,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnDown(InputAction.CallbackContext context);
         void OnPositionMouse(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
-        void OnUpdate(InputAction.CallbackContext context);
-    }
-    public interface ITestActions
-    {
-        void OnPosMouse(InputAction.CallbackContext context);
+        void OnOpenMenu(InputAction.CallbackContext context);
     }
 }

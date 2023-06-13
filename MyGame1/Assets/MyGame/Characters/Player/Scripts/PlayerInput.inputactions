@@ -60,9 +60,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Update",
+                    "name": "OpenMenu",
                     "type": "Button",
-                    "id": "e4e350b7-78eb-44bd-bd8b-133aea7ee812",
+                    "id": "1ed3fff1-0b11-4c8c-8ce9-554c63bf87a6",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -160,40 +160,12 @@
                 },
                 {
                     "name": "",
-                    "id": "f797d98d-5d00-4ac5-b556-ea7e9e19ad7a",
-                    "path": "<Keyboard>/j",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard and Mouse",
-                    "action": "Update",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Test",
-            "id": "70e631a7-57e1-42a0-ac53-f8310d58509d",
-            "actions": [
-                {
-                    "name": "PosMouse",
-                    "type": "Value",
-                    "id": "cf5ea1d9-2203-4079-8fa7-b5c22e3de518",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "940e8d97-c1af-420e-9e70-422c5670db7a",
-                    "path": "<Mouse>/position",
+                    "id": "4311aa25-7ea4-4921-ae5f-5a6d6444a353",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "PosMouse",
+                    "action": "OpenMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

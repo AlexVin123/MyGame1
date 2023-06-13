@@ -2,31 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Health : MonoBehaviour
 {
     private float _health;
     [SerializeField] private float _maxHealth;
-    [SerializeField] private Bar _healthBar;
 
-    private event Action<float, float> _OnChangedHealtEvent;
+    public UnityAction<float,float> ChangedHealt;
 
     public float MaxHealth => _maxHealth;
 
     public float CurrentHealth => _health;
-
-    private void OnEnable()
-    {
-        if (_healthBar != null)
-            _OnChangedHealtEvent += _healthBar.ChaingeBar;
-
-    }
-
-    private void OnDisable()
-    {
-        if (_healthBar != null)
-            _OnChangedHealtEvent -= _healthBar.ChaingeBar;
-    }
 
     public void Heal(float value)
     {
@@ -39,10 +26,10 @@ public class Health : MonoBehaviour
             _health += value;
         }
 
-        _OnChangedHealtEvent?.Invoke(_health, _maxHealth);
+        ChangedHealt?.Invoke(_health, _maxHealth);
     }
 
-    public void Init(ICharacterParameters parameters)
+    public void Init(ICharacterConfig parameters = null)
     {
         if (parameters != null)
         {
@@ -66,6 +53,6 @@ public class Health : MonoBehaviour
             _health = 0;
         }
 
-        _OnChangedHealtEvent?.Invoke(_health, _maxHealth);
+        ChangedHealt?.Invoke(_health, _maxHealth);
     }
 }

@@ -9,7 +9,7 @@ public class MovementDirectionX : AbilityRB
     private float _speed;
     private float _targetSpeed;
 
-    public override void Init(ICharacterParameters parametrs)
+    public override void Init(ICharacterConfig parametrs)
     {
         base.Init(parametrs);
         if (parametrs != null)

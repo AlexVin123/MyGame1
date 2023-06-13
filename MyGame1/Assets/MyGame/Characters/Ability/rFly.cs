@@ -10,7 +10,7 @@ public class rFly : AbilityRB
     private Vector2 _speed;
     private Vector2 _targetSpeed;
 
-    public override void Init(ICharacterParameters parameters)
+    public override void Init(ICharacterConfig parameters)
     {
         base.Init(parameters);
     }
