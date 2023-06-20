@@ -7,10 +7,10 @@ public class TimerInvoker : MonoBehaviour
     private float _onSecTimer;
     private float _onSecUnscaledTimer;
 
-    public event Action<float> OnUpdateTimeTickedEvent;
-    public event Action<float> OnUpdateTimeUnscaledTickedEvent;
-    public event Action OnOneSecondTimeTickedEvent;
-    public event Action OnOnSecondUnscaledTickedEvent;
+    public event Action<float> UpdateTimeTicked;
+    public event Action<float> UpdateTimeUnscaledTicked;
+    public event Action OneSecondTimeTicked;
+    public event Action OneSecondUnscaledTicked;
 
     public static TimerInvoker Instance
     {
@@ -31,26 +31,23 @@ public class TimerInvoker : MonoBehaviour
     private void Update()
     {
         var deltaTime = Time.deltaTime;
-        OnUpdateTimeTickedEvent?.Invoke(deltaTime);
+        UpdateTimeTicked?.Invoke(deltaTime);
         _onSecTimer += deltaTime;
 
         if(_onSecTimer >= 1f)
         {
             _onSecTimer -= 1f;
-            OnOneSecondTimeTickedEvent?.Invoke();
+            OneSecondTimeTicked?.Invoke();
         }
 
         var unscaledDeltaTime = Time.unscaledDeltaTime;
-        OnUpdateTimeUnscaledTickedEvent?.Invoke(unscaledDeltaTime);
+        UpdateTimeUnscaledTicked?.Invoke(unscaledDeltaTime);
         _onSecUnscaledTimer += unscaledDeltaTime;
 
         if(_onSecUnscaledTimer >= 1f)
         {
             _onSecUnscaledTimer -= 1f;
-            OnOnSecondUnscaledTickedEvent?.Invoke();
+            OneSecondUnscaledTicked?.Invoke();
         }
     }
-
-
-
 }

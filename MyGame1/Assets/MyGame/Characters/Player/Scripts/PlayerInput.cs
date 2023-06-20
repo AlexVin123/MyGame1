@@ -83,8 +83,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""OpenMenu"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""1ed3fff1-0b11-4c8c-8ce9-554c63bf87a6"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ShootPress"",
+                    ""type"": ""Button"",
+                    ""id"": ""a2af251a-662a-4022-9993-b1c913cbac63"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -190,6 +199,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""OpenMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""61117057-d6a7-435d-bf34-dd7c095425e6"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShootPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -222,6 +242,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_PlayerController_PositionMouse = m_PlayerController.FindAction("PositionMouse", throwIfNotFound: true);
         m_PlayerController_Shoot = m_PlayerController.FindAction("Shoot", throwIfNotFound: true);
         m_PlayerController_OpenMenu = m_PlayerController.FindAction("OpenMenu", throwIfNotFound: true);
+        m_PlayerController_ShootPress = m_PlayerController.FindAction("ShootPress", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -290,6 +311,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerController_PositionMouse;
     private readonly InputAction m_PlayerController_Shoot;
     private readonly InputAction m_PlayerController_OpenMenu;
+    private readonly InputAction m_PlayerController_ShootPress;
     public struct PlayerControllerActions
     {
         private @PlayerInput m_Wrapper;
@@ -301,6 +323,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @PositionMouse => m_Wrapper.m_PlayerController_PositionMouse;
         public InputAction @Shoot => m_Wrapper.m_PlayerController_Shoot;
         public InputAction @OpenMenu => m_Wrapper.m_PlayerController_OpenMenu;
+        public InputAction @ShootPress => m_Wrapper.m_PlayerController_ShootPress;
         public InputActionMap Get() { return m_Wrapper.m_PlayerController; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -331,6 +354,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @OpenMenu.started += instance.OnOpenMenu;
             @OpenMenu.performed += instance.OnOpenMenu;
             @OpenMenu.canceled += instance.OnOpenMenu;
+            @ShootPress.started += instance.OnShootPress;
+            @ShootPress.performed += instance.OnShootPress;
+            @ShootPress.canceled += instance.OnShootPress;
         }
 
         private void UnregisterCallbacks(IPlayerControllerActions instance)
@@ -356,6 +382,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @OpenMenu.started -= instance.OnOpenMenu;
             @OpenMenu.performed -= instance.OnOpenMenu;
             @OpenMenu.canceled -= instance.OnOpenMenu;
+            @ShootPress.started -= instance.OnShootPress;
+            @ShootPress.performed -= instance.OnShootPress;
+            @ShootPress.canceled -= instance.OnShootPress;
         }
 
         public void RemoveCallbacks(IPlayerControllerActions instance)
@@ -391,5 +420,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnPositionMouse(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnOpenMenu(InputAction.CallbackContext context);
+        void OnShootPress(InputAction.CallbackContext context);
     }
 }

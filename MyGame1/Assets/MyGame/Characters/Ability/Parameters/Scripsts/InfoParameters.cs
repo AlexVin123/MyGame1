@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Create Info Parameters", fileName = "New Info Paramers")]
 public class InfoParameters : ScriptableObject
 {
-    [SerializeField] private List<InfoParameter> _parameters;
+    [SerializeField] private InfoParameter[] _parameters;
 
     public InfoParameter GetInfo(TypeParameter type)
     {

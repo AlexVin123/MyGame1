@@ -1,15 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TaranAnimationController : AnimatorController
+public class TaranAnimationController : EnemyAnimations
 {
     private int _triggerIdle = Animator.StringToHash("TriggerIdle");
     private int _triggerAttack = Animator.StringToHash("TriggerAttack");
     private int _triggerBurst = Animator.StringToHash("TriggerBurst");
     private int _triggerWalk = Animator.StringToHash("TriggerWalk");
 
-    public override void OnChaigedState(TypeState state)
+    public override void OnChaigeState(TypeState state)
     {
         switch (state)
         {

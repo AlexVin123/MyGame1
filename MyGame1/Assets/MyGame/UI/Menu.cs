@@ -1,14 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
-    public UnityAction PanelCloused;
-    public UnityAction PanelOpen;
+    public event UnityAction PanelCloused;
+    public event UnityAction PanelOpen;
     public virtual void OpenClouse(InputAction.CallbackContext obj)
     {
         if(gameObject.activeInHierarchy)

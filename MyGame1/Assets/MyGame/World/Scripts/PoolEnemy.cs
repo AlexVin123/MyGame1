@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -9,9 +7,9 @@ public class PoolEnemy
     [SerializeField] private Enemy _prefab;
     [SerializeField] private int _count;
 
-    public EnemyType EnemyIndex => _enemyIndex;
-
     private PoolMono<Enemy> _pool;
+
+    public EnemyType EnemyIndex => _enemyIndex;
 
     public Enemy[] GetAllEnemy()
     {
@@ -26,14 +24,14 @@ public class PoolEnemy
         foreach (Enemy enemy in allEnemy)
         {
             enemy.Init(null);
-            enemy.AddTarget(target);
+            enemy.OnTargetEnter(target);
         }
     }
 
     public Enemy Spawn(Vector2 position)
     {
         Enemy enemy = _pool.GetFreeElement(position);
-        enemy.ResetParam();
+        enemy.Reset();
         return enemy;
     }
 }

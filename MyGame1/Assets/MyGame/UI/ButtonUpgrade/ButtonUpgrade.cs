@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -9,9 +7,8 @@ public class ButtonUpgrade : MonoBehaviour
     [SerializeField] private Button _button;
     [SerializeField] private TypeParameter _typeParameter;
 
-    public UnityAction<TypeParameter> Updated;
-    public UnityAction Cliked;
-    public Button Button => _button;
+    public event UnityAction<TypeParameter> Updated;
+    public event UnityAction Cliked;
 
     public void Init(TypeParameter typeParameter, Sprite image)
     {

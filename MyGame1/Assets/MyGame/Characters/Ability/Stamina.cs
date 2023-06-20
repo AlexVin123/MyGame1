@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,6 +5,7 @@ public class Stamina : MonoBehaviour
 {
     [SerializeField] private int _maxCout;
     [SerializeField] private float _delay;
+
     private int _currentCount;
     private float _timer;
 

@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Ability:MonoBehaviour
+public abstract class Ability : MonoBehaviour
 {
     [SerializeField] private TypeAbility _typeAbility;
 
@@ -11,8 +9,7 @@ public abstract class Ability:MonoBehaviour
 
     public virtual void Perform() { }
 
-    public virtual void Perform(float directionX) { }
-
     public virtual void Perform(Vector2 direction) { }
 
+    public virtual void Perform(ITarget target) { }
 }

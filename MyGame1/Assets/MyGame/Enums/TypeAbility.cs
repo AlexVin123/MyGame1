@@ -4,5 +4,5 @@ using UnityEngine;
 
 public enum TypeAbility
 {
-    None ,Move, Jump, Attack, Abillity2, Abillity3, Abillity4, Abillity5, Abillity6, Abillity7, Abillity8, Abillity9
+    None ,MoveDirectionX, Jump, Attack, MoveToPoint, MoveFromPoint, SummoningThunder, Fly, JumpAttack, BurstAttack, Burst, WaveAttack,OneAttack
 }

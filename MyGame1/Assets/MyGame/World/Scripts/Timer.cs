@@ -2,8 +2,8 @@ using System;
 
 public class Timer
 {
-    public event Action<float> OnTimerValueChangedEvent;
-    public event Action OnTimerFinishedEvent;
+    public event Action<float> TimerValueChanged;
+    public event Action TimerFinished;
 
     public bool IsPaused { get; private set; }
     public TypeTimer Type { get; private set; }
@@ -20,30 +20,22 @@ public class Timer
         SetTime(seconds);
     }
 
-    public bool TryEmpty()
-    {
-        if (OnTimerFinishedEvent == null)
-            return true;
-        else
-            return false;
-    }
-
     public void SetTime(float seconds)
     {
         RemainingSecond = seconds;
-        OnTimerValueChangedEvent?.Invoke(RemainingSecond);
+        TimerValueChanged?.Invoke(RemainingSecond);
     }
 
     public void Start()
     {
         if(RemainingSecond == 0)
         {
-            OnTimerFinishedEvent?.Invoke();
+            TimerFinished?.Invoke();
         }
 
         IsPaused = false;
         Subscribe();
-        OnTimerValueChangedEvent?.Invoke(RemainingSecond);
+        TimerValueChanged?.Invoke(RemainingSecond);
     }
 
     public void Start(float seconds)
@@ -56,22 +48,22 @@ public class Timer
     {
         IsPaused = true;
         Unsubscrbe();
-        OnTimerValueChangedEvent?.Invoke(RemainingSecond);
+        TimerValueChanged?.Invoke(RemainingSecond);
     }
 
     public void UnPause()
     {
         IsPaused = false;
         Subscribe();
-        OnTimerValueChangedEvent?.Invoke(RemainingSecond);
+        TimerValueChanged?.Invoke(RemainingSecond);
     }
 
     public void Stop()
     {
         Unsubscrbe();
         RemainingSecond = 0;
-        OnTimerValueChangedEvent?.Invoke(RemainingSecond);
-        OnTimerFinishedEvent?.Invoke();
+        TimerValueChanged?.Invoke(RemainingSecond);
+        TimerFinished?.Invoke();
     }
 
     private void Subscribe()
@@ -79,16 +71,16 @@ public class Timer
         switch(Type)
         {
             case TypeTimer.UpdateTick:
-                TimerInvoker.Instance.OnUpdateTimeTickedEvent += OnUpdateTick;
+                TimerInvoker.Instance.UpdateTimeTicked += OnUpdateTick;
                 break;
             case TypeTimer.UpdateTickUnscaled:
-                TimerInvoker.Instance.OnUpdateTimeUnscaledTickedEvent += OnUpdateTick;
+                TimerInvoker.Instance.UpdateTimeUnscaledTicked += OnUpdateTick;
                 break;
             case TypeTimer.OneSecTick:
-                TimerInvoker.Instance.OnOneSecondTimeTickedEvent += OnOneSecTick;
+                TimerInvoker.Instance.OneSecondTimeTicked += OnOneSecTick;
                 break;
             case TypeTimer.OneSecTickUnscaled:
-                TimerInvoker.Instance.OnOnSecondUnscaledTickedEvent += OnOneSecTick;
+                TimerInvoker.Instance.OneSecondUnscaledTicked += OnOneSecTick;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -100,16 +92,16 @@ public class Timer
         switch (Type)
         {
             case TypeTimer.UpdateTick:
-                TimerInvoker.Instance.OnUpdateTimeTickedEvent -= OnUpdateTick;
+                TimerInvoker.Instance.UpdateTimeTicked -= OnUpdateTick;
                 break;
             case TypeTimer.UpdateTickUnscaled:
-                TimerInvoker.Instance.OnUpdateTimeUnscaledTickedEvent -= OnUpdateTick;
+                TimerInvoker.Instance.UpdateTimeUnscaledTicked -= OnUpdateTick;
                 break;
             case TypeTimer.OneSecTick:
-                TimerInvoker.Instance.OnOneSecondTimeTickedEvent -= OnOneSecTick;
+                TimerInvoker.Instance.OneSecondTimeTicked -= OnOneSecTick;
                 break;
             case TypeTimer.OneSecTickUnscaled:
-                TimerInvoker.Instance.OnOnSecondUnscaledTickedEvent -= OnOneSecTick;
+                TimerInvoker.Instance.OneSecondUnscaledTicked -= OnOneSecTick;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -122,7 +114,7 @@ public class Timer
             return;
 
         RemainingSecond -= deltaTime;
-        OnTimerValueChangedEvent?.Invoke(RemainingSecond);
+        TimerValueChanged?.Invoke(RemainingSecond);
 
         if(CheckFinish())
         {
@@ -136,7 +128,7 @@ public class Timer
             return;
 
         RemainingSecond -= 1f;
-        OnTimerValueChangedEvent?.Invoke(RemainingSecond);
+        TimerValueChanged?.Invoke(RemainingSecond);
 
         if(CheckFinish())
         {

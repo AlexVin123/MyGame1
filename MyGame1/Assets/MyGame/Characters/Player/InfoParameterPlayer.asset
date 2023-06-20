@@ -29,8 +29,8 @@ MonoBehaviour:
     _type: 2
     _values:
     - 80
+    - 100
     - 120
-    - 160
   - _sprite: {fileID: 4119900466527680643, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
     _type: 3
     _values:
@@ -52,9 +52,9 @@ MonoBehaviour:
   - _sprite: {fileID: 5809094394127269038, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
     _type: 6
     _values:
-    - 3
+    - 5
+    - 5
     - 7
-    - 10
   - _sprite: {fileID: 202158678554010356, guid: 2c572861c665d08429dac01246ab48b9, type: 3}
     _type: 7
     _values:

@@ -11,11 +11,11 @@ public class DamageableObject : MonoBehaviour, ITarget
 
     protected Health Health;
 
+    public event UnityAction TakedDamage;
+
+    public  event UnityAction Dying;
+
     public UnityAction<float, float> ChaigedHealth { get { return Health.ChangedHealt; } set { Health.ChangedHealt = value; } }
-
-    public UnityAction TakedDamage;
-
-    public UnityAction Dying;
 
     public Vector2 Position => transform.position;
 
@@ -23,7 +23,7 @@ public class DamageableObject : MonoBehaviour, ITarget
 
     public TypeTarget TargetType => _typeTarget;
 
-    public virtual void Init(ICharacterConfig parameter = null)
+    public virtual void Init(ICharacterConfig parameter)
     {
         Health = GetComponent<Health>();
         Health.Init(parameter);
@@ -47,11 +47,5 @@ public class DamageableObject : MonoBehaviour, ITarget
     {
         Dying?.Invoke();
         gameObject.SetActive(false);
-    }
-
-    public virtual void ResetParam()
-    {
-        if (Health != null)
-            Health.Init();
     }
 }

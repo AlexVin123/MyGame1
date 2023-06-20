@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class TakeDamageTranzit : Transit
 {
     private bool IsTakedDameg = false;
@@ -10,7 +6,7 @@ public class TakeDamageTranzit : Transit
     {
         base.Init(enemy);
         IsTakedDameg = false;
-        Enemy.TakedDamage = OnTekeDamage;
+        Enemy.TakedDamage += OnTekeDamage;
     }
 
     public override bool NeedTransit()
@@ -27,7 +23,7 @@ public class TakeDamageTranzit : Transit
     private void OnEnable()
     {
         if (Enemy != null)
-            Enemy.TakedDamage = OnTekeDamage;
+            Enemy.TakedDamage += OnTekeDamage;
     }
 
     private void OnDisable()

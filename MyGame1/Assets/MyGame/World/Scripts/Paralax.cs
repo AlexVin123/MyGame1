@@ -1,26 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Paralax : MonoBehaviour
 {
     [SerializeField] private float _parallaxSpeed = 0.1f;
     [SerializeField] private bool _verticalParalax;
+    [SerializeField] private Transform _followingTarget;
 
-    private Transform _followingTarget;
     private Vector3 _targetPreviosPosition;
 
-    
-    void Start()
+    private void Start()
     {
-        if(_followingTarget == null)
+        if (_followingTarget == null)
             _followingTarget = Camera.main.transform;
 
         _targetPreviosPosition = _followingTarget.position;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         var delta = _followingTarget.position - _targetPreviosPosition;
 
@@ -28,7 +24,6 @@ public class Paralax : MonoBehaviour
             delta.y = 0;
 
         _targetPreviosPosition = _followingTarget.position;
-
         transform.position += delta * _parallaxSpeed;
     }
 }

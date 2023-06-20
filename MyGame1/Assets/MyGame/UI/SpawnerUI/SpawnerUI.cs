@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnerUI : MonoBehaviour
@@ -8,7 +6,7 @@ public class SpawnerUI : MonoBehaviour
     [SerializeField] private GameObject _container;
     [SerializeField] private Bar _pogresWave;
 
-    private List<PointWaveUI> _poinst;
+    private PointWaveUI[] _poinst;
     public void Init(Spawner spawner)
     {
         InstatiatePoints(spawner.CountWave);
@@ -16,11 +14,11 @@ public class SpawnerUI : MonoBehaviour
 
     private void InstatiatePoints(int count)
     {
-        _poinst = new List<PointWaveUI>();
+        _poinst = new PointWaveUI[count];
 
         for (int i = 0; i < count; i++)
         {
-            _poinst.Add(Instantiate(_prefab,_container.transform,true));
+            _poinst[i] = Instantiate(_prefab,_container.transform,true);
             _poinst[i].IsActivePoint = false;
         }
     }

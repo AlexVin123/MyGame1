@@ -1,37 +1,31 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
-[System.Serializable]
+
 public class PanelUpgrade : Menu
 {
     [SerializeField] private ButtonUpgrade[] _buttons;
-    private List<TypeParameter> typeParameters;
-    private List<TypeParameter> random;
+    private List<TypeParameter> _typeParameters;
+    private List<TypeParameter> _randomParametersForButton;
     private UpgradeParameter _upgradeSystem;
 
     private void OnEnable()
     {
-
         InitButton();
         Subscribe();
     }
 
     private void OnDisable()
     {
-        random = new List<TypeParameter>();
+        _randomParametersForButton = new List<TypeParameter>();
         UnSubscribe();
     }
 
     public void init()
     {
-        typeParameters = new List<TypeParameter>();
+        _typeParameters = new List<TypeParameter>();
 
-     foreach (var typeParameter in System.Enum.GetValues(typeof(TypeParameter)))
-        {
-            typeParameters.Add((TypeParameter)typeParameter);
-        }
+        foreach (var typeParameter in System.Enum.GetValues(typeof(TypeParameter)))
+            _typeParameters.Add((TypeParameter)typeParameter);
     }
 
     public void SetUpdateSystem(UpgradeParameter upgrade)
@@ -43,10 +37,8 @@ public class PanelUpgrade : Menu
     {
         List<TypeParameter> clone = new List<TypeParameter>();
 
-        foreach(TypeParameter typeParameter in typeParameters)
-        {
+        foreach (TypeParameter typeParameter in _typeParameters)
             clone.Add(typeParameter);
-        }
 
         return clone;
     }
@@ -54,7 +46,7 @@ public class PanelUpgrade : Menu
     private void CreateRandom()
     {
         List<TypeParameter> temp = Clone();
-        random = new List<TypeParameter>();
+        _randomParametersForButton = new List<TypeParameter>();
 
         for (int i = 0; i < _buttons.Length; i++)
         {
@@ -62,14 +54,14 @@ public class PanelUpgrade : Menu
                 return;
 
             int index = Random.Range(0, temp.Count);
-            random.Add(temp[index]);
+            _randomParametersForButton.Add(temp[index]);
             temp.RemoveAt(index);
         }
     }
 
     private void Subscribe()
     {
-        _upgradeSystem.MAXLVL += OnMaxLevelRech;
+        _upgradeSystem.MaxLevelReched += OnMaxLevelRech;
 
         foreach (var button in _buttons)
         {
@@ -80,7 +72,7 @@ public class PanelUpgrade : Menu
 
     private void UnSubscribe()
     {
-        _upgradeSystem.MAXLVL -= OnMaxLevelRech;
+        _upgradeSystem.MaxLevelReched -= OnMaxLevelRech;
 
         foreach (var button in _buttons)
         {
@@ -93,17 +85,15 @@ public class PanelUpgrade : Menu
     {
         CreateRandom();
         for (int i = 0; i < _buttons.Length; i++)
-        {
-            _buttons[i].Init(random[i], _upgradeSystem.InfoParameters.GetSprite(random[i]));
-        }
+            _buttons[i].Init(_randomParametersForButton[i], _upgradeSystem.InfoParameters.GetSprite(_randomParametersForButton[i]));
     }
 
     private void OnMaxLevelRech(TypeParameter typeParameter)
     {
-        for (int i = 0; i < typeParameters.Count; i++)
+        for (int i = 0; i < _typeParameters.Count; i++)
         {
-            if(typeParameters[i] == typeParameter)
-                typeParameters.RemoveAt(i);
+            if (_typeParameters[i] == typeParameter)
+                _typeParameters.RemoveAt(i);
         }
     }
 }

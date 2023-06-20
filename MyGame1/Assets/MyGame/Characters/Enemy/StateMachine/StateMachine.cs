@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,29 +8,7 @@ public class StateMachine : MonoBehaviour
     private Enemy _enemy;
     private State _currentState;
 
-    public UnityAction<TypeState> ChaigedState;
-
-    public void Init(Enemy enemy)
-    {
-        _enemy = enemy;
-        InitState();
-
-        if (_currentState == null)
-            _currentState = _startState;
-
-        _currentState.Enter();
-    }
-
-    public void Reset()
-    {
-        if (_currentState != null)
-            _currentState.Exit();
-
-        _currentState = _startState;
-
-        if (_currentState != null)
-            _currentState.Enter();
-    }
+    public event UnityAction<TypeState> ChaigedState;
 
     private void Update()
     {
@@ -46,6 +22,28 @@ public class StateMachine : MonoBehaviour
             StateTransition(nextState);
             ChaigedState?.Invoke(nextState.TypeState);
         }
+    }
+
+    public void Reset()
+    {
+        if (_currentState != null)
+            _currentState.Exit();
+
+        _currentState = _startState;
+
+        if (_currentState != null)
+            _currentState.Enter();
+    }
+
+    public void Init(Enemy enemy)
+    {
+        _enemy = enemy;
+        InitState();
+
+        if (_currentState == null)
+            _currentState = _startState;
+
+        _currentState.Enter();
     }
 
     private void StateTransition(State nextState)
@@ -64,5 +62,4 @@ public class StateMachine : MonoBehaviour
             state.Init(_enemy);
         }
     }
-
 }

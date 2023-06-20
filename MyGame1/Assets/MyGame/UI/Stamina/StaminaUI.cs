@@ -46,17 +46,10 @@ public class StaminaUI : MonoBehaviour
         _current.Load(value, maxValue);
     }
 
-    private void CreateUnit(int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            _unitList.Add(Instantiate(unitsPrefab, _conteiner.transform));
-        }
-    }
-
     public void OnChaingeCount(int currentCount)
     {
         _currentCount = currentCount;
+
         for(int i = _count; i != currentCount;)
         {
             _unitList[i-1].Null();
@@ -64,8 +57,12 @@ public class StaminaUI : MonoBehaviour
         }
 
         if (currentCount != _count)
-        {
-            _current = _unitList[currentCount];
-        }
+            _current = _unitList[currentCount]; 
+    }
+
+    private void CreateUnit(int count)
+    {
+        for (int i = 0; i < count; i++) 
+            _unitList.Add(Instantiate(unitsPrefab, _conteiner.transform)); 
     }
 }

@@ -61,8 +61,17 @@
                 },
                 {
                     "name": "OpenMenu",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "1ed3fff1-0b11-4c8c-8ce9-554c63bf87a6",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ShootPress",
+                    "type": "Button",
+                    "id": "a2af251a-662a-4022-9993-b1c913cbac63",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -166,6 +175,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "OpenMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "61117057-d6a7-435d-bf34-dd7c095425e6",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ShootPress",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

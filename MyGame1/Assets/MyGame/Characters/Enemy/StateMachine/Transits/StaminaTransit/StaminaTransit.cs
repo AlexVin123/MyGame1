@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Stamina))]
@@ -17,9 +15,6 @@ public class StaminaTransit : Transit
 
     public override bool NeedTransit()
     {
-       // Debug.Log("Стамина - " + _stamina.IsExist);
-       // Debug.Log("Дистанция - " + _transit2.NeedTransit());
-
         if(_stamina.IsExist && _transit2.NeedTransit())
         {
             _stamina.Spend();

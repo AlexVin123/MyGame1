@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Transit:MonoBehaviour
 {
-    [SerializeField] private string Discription;
    [SerializeField] private State _targetState;
 
-    public State TargetState => _targetState;
-
     protected Enemy Enemy;
+
+    public State TargetState => _targetState;
 
     public virtual void Init(Enemy enemy)
     {

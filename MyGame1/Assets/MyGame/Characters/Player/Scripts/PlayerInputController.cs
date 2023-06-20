@@ -1,35 +1,23 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(IControllable))]
 public class PlayerInputController : MonoBehaviour
 {
     private IControllable _controllable;
     private PlayerInput _input;
-    private Animator _animator;
-    private int ParameterOnWalk = Animator.StringToHash("OnWalk");
     private bool _isActive { get; set; }
 
     public PlayerInput Input => _input;
-
 
     public void Init()
     {
         _input = new PlayerInput();
         _controllable = GetComponent<IControllable>();
-        _animator = GetComponent<Animator>();
         _input.Enable();
         _input.PlayerController.Jump.performed += OnJump;
         _input.PlayerController.Burst.performed += OnBurst;
         _input.PlayerController.Down.performed += OnDown;
-        _input.PlayerController.Shoot.performed += OnShoot;
-    }
-
-    private void OnEnable()
-    {
-
     }
 
     private void OnDisable()
@@ -37,17 +25,26 @@ public class PlayerInputController : MonoBehaviour
         _input.PlayerController.Jump.performed -= OnJump;
         _input.PlayerController.Burst.performed -= OnBurst;
         _input.PlayerController.Down.performed -= OnDown;
-        _input.PlayerController.Shoot.performed -= OnShoot;
         _input.Disable();
     }
 
     private void FixedUpdate()
     {
-        if(_isActive)
+        if (_isActive)
         {
-        ReadMove();
-        ReadAim();
+            ReadMove();
+            ReadAim();
+            ReedShoot();
         }
+    }
+
+    private void ReedShoot()
+    {
+        float Press = _input.PlayerController.ShootPress.ReadValue<float>();
+
+        if (Press > 0)
+            _controllable.Shoot();
+
     }
 
     public void OnOpenPanel()
@@ -62,34 +59,26 @@ public class PlayerInputController : MonoBehaviour
 
     private void OnDown(InputAction.CallbackContext obj)
     {
-        if(_isActive)
+        if (_isActive)
         {
-        _controllable.Down();
+            _controllable.Down();
         }
     }
 
     private void OnBurst(InputAction.CallbackContext obj)
     {
-        if(_isActive)
+        if (_isActive)
         {
-        Vector2 direction = _input.PlayerController.MoveX.ReadValue<Vector2>();
-        _controllable.Burst(direction);
+            Vector2 direction = _input.PlayerController.MoveX.ReadValue<Vector2>();
+            _controllable.Burst(direction);
         }
     }
 
     private void OnJump(InputAction.CallbackContext obj)
     {
-        if(_isActive)
+        if (_isActive)
         {
             _controllable.Jump();
-        }
-    }
-
-    private void OnShoot(InputAction.CallbackContext obj)
-    {
-        if(_isActive)
-        {
-        _controllable.Shoot();
         }
     }
 
@@ -103,14 +92,5 @@ public class PlayerInputController : MonoBehaviour
     {
         Vector2 direction = _input.PlayerController.MoveX.ReadValue<Vector2>();
         _controllable.Move(direction);
-
-        if(direction.x == 0)
-        {
-            _animator.SetBool(ParameterOnWalk, false);
-        }
-        else
-        {
-            _animator.SetBool(ParameterOnWalk, true);
-        }
     }
 }

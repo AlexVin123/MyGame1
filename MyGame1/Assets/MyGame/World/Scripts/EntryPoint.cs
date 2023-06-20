@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EntryPoint : MonoBehaviour
@@ -15,6 +13,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private Bar _targerBar;
     [SerializeField] private DamageableObject _firstTarget;
     [SerializeField] private DamageableObject[] _damageableObjects;
+    [SerializeField] private ResultGamePanel _resultGamePanel;
 
     private PlayerParameters _playerParameters;
     private UpgradeParameter _upgradeSystem;
@@ -29,8 +28,13 @@ public class EntryPoint : MonoBehaviour
         _randomUpgrade.SetUpdateSystem(_upgradeSystem);
 
         _playerInputController.Init();
-        _spawnerUI.Init(_spawner);
-        _firstTarget.Init();
+
+        if (_spawnerUI != null)
+            _spawnerUI.Init(_spawner);
+
+        if (_firstTarget != null)
+            _firstTarget.Init(null);
+
         _staminaPlayer.Init(_player.CountStamina);
         Subscribe();
 
@@ -39,16 +43,13 @@ public class EntryPoint : MonoBehaviour
         _randomUpgrade.init();
         _randomUpgrade.Open();
 
-        if(_damageableObjects != null)
+        if (_damageableObjects != null)
         {
             foreach (var damageableObject in _damageableObjects)
             {
-                damageableObject.Init();
+                damageableObject.Init(null);
             }
         }
-
-
-
     }
 
     private void OnDisable()
@@ -60,14 +61,18 @@ public class EntryPoint : MonoBehaviour
     {
         _playerInputController.Input.PlayerController.OpenMenu.performed += _menu.OpenClouse;
 
-        _randomUpgrade.PanelCloused += _spawner.SpawnEnemyInPoints;
+        _randomUpgrade.PanelCloused += _spawner.OnPanelClouse;
         _randomUpgrade.PanelCloused += _playerInputController.OnClousedPanel;
         _randomUpgrade.PanelOpen += _playerInputController.OnOpenPanel;
 
         _spawner.EndWave += _randomUpgrade.Open;
-        _spawner.EndSpawn += SceneTransit;
+        _spawner.EndSpawn += _resultGamePanel.OnWin;
+
+        if(_spawnerUI != null)
+        {
         _spawner.ChaigedWave += _spawnerUI.OnChaigeWave;
         _spawner.ChaigedWaveProgress += _spawnerUI.OnChangeProgressWave;
+        }
 
         _upgradeSystem.Upgraded += _player.OnUpgradeParameter;
 
@@ -79,17 +84,27 @@ public class EntryPoint : MonoBehaviour
         _player.ChaigeLoadStaminaPoint += _staminaPlayer.OnLoadStaminaPoint;
         _player.ChaigedHealth += _healthPlayer.ChaingeBar;
 
-        _firstTarget.ChaigedHealth += _targerBar.ChaingeBar;
+        if (_firstTarget != null && _targerBar != null)
+            _firstTarget.ChaigedHealth += _targerBar.ChaingeBar;
+
+        _player.Dying += _resultGamePanel.OnDyingPlayer;
+
+        if (_firstTarget != null)
+            _firstTarget.Dying += _resultGamePanel.OnDyingHouse;
     }
 
     private void UnSubscribe()
     {
         _spawner.EndWave -= _randomUpgrade.Open;
-        _spawner.EndSpawn -= SceneTransit;
+        _spawner.EndSpawn -= _resultGamePanel.OnWin;
+
+        if(_spawnerUI != null)
+        {
         _spawner.ChaigedWave -= _spawnerUI.OnChaigeWave;
         _spawner.ChaigedWaveProgress -= _spawnerUI.OnChangeProgressWave;
+        }
 
-        _randomUpgrade.PanelCloused -= _spawner.SpawnEnemyInPoints;
+        _randomUpgrade.PanelCloused -= _spawner.OnPanelClouse;
         _randomUpgrade.PanelOpen -= _playerInputController.OnOpenPanel;
         _randomUpgrade.PanelCloused -= _playerInputController.OnClousedPanel;
 
@@ -105,11 +120,12 @@ public class EntryPoint : MonoBehaviour
         _player.ChaigeLoadStaminaPoint -= _staminaPlayer.OnLoadStaminaPoint;
         _player.ChaigedHealth -= _healthPlayer.ChaingeBar;
 
-        _firstTarget.ChaigedHealth -= _targerBar.ChaingeBar;
-    }
+        if (_firstTarget != null && _targerBar != null)
+            _firstTarget.ChaigedHealth -= _targerBar.ChaingeBar;
 
-    private void SceneTransit()
-    {
-        SceneTransition.SwithToScene(1);
+        _player.Dying += _resultGamePanel.OnDyingPlayer;
+
+        if (_firstTarget != null)
+            _firstTarget.Dying += _resultGamePanel.OnDyingHouse;
     }
 }
